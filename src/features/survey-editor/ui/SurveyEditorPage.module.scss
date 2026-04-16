@@ -251,15 +251,19 @@
 .addOptionBtn {
   margin-top: 10px;
   background: transparent;
-  padding: 6px 6px;
-  padding-top: 0px;
+  padding: 8px 12px;
   font-weight: 500;
   cursor: pointer;
   border: 1px dashed var(--line);
-  border-radius: 3px;
+  border-radius: 8px;
   color: #A9A5D8;
   background: var(--primary-soft);
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
   &:hover {
     box-shadow: 0 0 0 3px var(--primary-soft);
     transform: translateY(-1px);
@@ -404,8 +408,18 @@
   border: 1px dashed var(--line);
   color: #A9A5D8;
   background: var(--primary-soft);
-  padding-top: 5px;
-  width: 165px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.plusIcon {
+  font-size: 25px;
+  color: var(--primary);
+  line-height: 1;
 }
 
 .helperLinks {

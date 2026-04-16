@@ -1,7 +1,8 @@
 .appShell {
   display: flex;
   flex-direction: column;
-  min-height: 100svh;
+  min-height: 100dvh;
+  min-height: 100vh;
   background: var(--page-bg);
 }
 
@@ -79,6 +80,51 @@
   border-radius: 50%;
   display: block;
   border: 1px solid rgba(139, 133, 241, 0.2);
+}
+
+.userName {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--text);
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.loginBtn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 10px;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.loginBtn:hover {
+  background: #7a74e0;
+}
+
+.logoutBtn {
+  padding: 6px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.logoutBtn:hover {
+  background: var(--primary-soft);
+  color: var(--primary);
+  border-color: var(--primary-border);
 }
 
 .sidebar {

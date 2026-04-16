@@ -341,7 +341,7 @@ export default function SurveyEditorPage() {
                   )
                 }
               >
-                <span style={{fontSize:'25px', marginRight:'5px', position:'relative', top:'3px', color:'var(--primary)'}}>+</span> Добавить вариант
+                <span className={styles.plusIcon}>+</span> Добавить вариант
               </button>
             )}
           </div>
@@ -352,7 +352,7 @@ export default function SurveyEditorPage() {
             type="button" 
             className={styles.ghostBtn} 
             onClick={handleAddMenuToggle}
-          ><span style={{fontSize:'25px', marginRight:'5px', top:'3px', position:"relative", color:'var(--primary)'}}>+</span> Добавить вопрос</button>
+          ><span className={styles.plusIcon}>+</span> Добавить вопрос</button>
           {addMenuOpen && (
             <div 
               className={styles.menu} 

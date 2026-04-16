@@ -1,4 +1,5 @@
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
+import { useAuth } from '../../../../context/AuthProvider'
 import bellIcon from '../../../../assets/bell.svg'
 import mainIcon from '../../../../assets/mainIcon.svg'
 import profileIcon from '../../../../assets/profileIcon.png'
@@ -13,7 +14,12 @@ function getHeaderMeta(pathname: string): { title: string; showBack: boolean } {
 
 export function AppLayout() {
   const { pathname } = useLocation()
+  const { user, logout, isLoading } = useAuth()
   const { title, showBack } = getHeaderMeta(pathname)
+
+  if (isLoading) {
+    return null
+  }
 
   return (
     <div className={styles.appShell}>
@@ -30,14 +36,31 @@ export function AppLayout() {
           <button type="button" className={styles.appTopBarIconBtn} aria-label="Уведомления">
             <img src={bellIcon} width={20} height={20} alt="" aria-hidden />
           </button>
-          <img
-            src={profileIcon}
-            width={36}
-            height={36}
-            className={styles.appTopBarAvatar}
-            alt=""
-            aria-hidden
-          />
+          {user ? (
+            <>
+              <span className={styles.userName}>{user.username}</span>
+              <img
+                src={profileIcon}
+                width={36}
+                height={36}
+                className={styles.appTopBarAvatar}
+                alt=""
+                aria-hidden
+              />
+              <button
+                type="button"
+                className={styles.logoutBtn}
+                onClick={logout}
+                aria-label="Выйти"
+              >
+                Выйти
+              </button>
+            </>
+          ) : (
+            <Link to="/login" className={styles.loginBtn}>
+              Войти
+            </Link>
+          )}
         </div>
       </header>
 
