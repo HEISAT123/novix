@@ -1,13 +1,35 @@
 .page {
   display: flex;
-  justify-content: center;
-  padding: 32px 16px 48px;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 16px 48px;
+  padding-top: 16px;
+}
+
+.progressBar {
+  width: 100%;
+  max-width: 560px;
+  height: 6px;
+  background: #e0d4f0;
+  border-radius: 3px;
+  margin-bottom: 32px;
+  overflow: hidden;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--primary, #6366f1);
+  border-radius: 3px;
+  transition: width 0.3s ease;
 }
 
 .card {
   width: 100%;
   max-width: 560px;
-  background: var(--surface);
+  background: #F6F2FC;
   border: 1px solid var(--line);
   border-radius: 16px;
   padding: 26px 24px;
@@ -29,6 +51,9 @@
   border-radius: 12px;
   background: #f7f6fb;
   padding: 14px;
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .qText {
@@ -36,14 +61,17 @@
   font-weight: 500;
 }
 
-.radio {
+.radioLabel {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   margin-bottom: 8px;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
 }
 
-.radio input {
+.radioLabel input {
   position: absolute;
   opacity: 0;
 }
@@ -54,9 +82,18 @@
   border-radius: 50%;
   border: 2px solid #c9c4d6;
   flex-shrink: 0;
+  margin-top: 2px;
 }
 
-.radio input:checked + .radioDot {
+.radioText {
+  flex: 1;
+  min-width: 0;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.radioLabel input:checked + .radioDot {
   border-color: var(--primary);
   background: var(--primary);
 }
@@ -66,7 +103,11 @@
   padding: 10px 12px;
   border: 1px solid var(--line);
   border-radius: 10px;
-  background: #fff;
+  background: #F3F2FB;
+  resize: none;
+  min-height: 40px;
+  max-height: 280px;
+  overflow: hidden;
 }
 
 .actions {

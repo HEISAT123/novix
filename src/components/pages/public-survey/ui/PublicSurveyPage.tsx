@@ -29,13 +29,13 @@ export default function PublicSurveyPage() {
   return (
     <div className={styles.page}>
       <form className={styles.card} onSubmit={handleSubmit}>
-        <h1 className={styles.title}>{survey.title || 'Опрос о продуктах'}</h1>
+        <h1 className={styles.title}>{survey.title}</h1>
         {survey.description && <p className={styles.desc}>{survey.description}</p>}
         {survey.questions.map((q, i) => (
           <div key={q.id} className={styles.question}>
             <p className={styles.qText}>Вопрос {i + 1}. "{q.text || '…'}"</p>
             {q.type === 'single' && q.options.map((opt, j) => (
-              <label key={`${opt}-${j}`} className={styles.radio}>
+              <label key={`${opt}-${j}`} className={styles.radioLabel}>
                 <input
                   type="radio"
                   name={q.id}
@@ -45,7 +45,7 @@ export default function PublicSurveyPage() {
                   required
                 />
                 <span className={styles.radioDot} aria-hidden />
-                <span>{opt}</span>
+                <span className={styles.radioText}>{opt}</span>
               </label>
             ))}
             {q.type === 'text' && (

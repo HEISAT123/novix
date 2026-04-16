@@ -9,7 +9,7 @@ import {
 export type UseSurveysApi = {
   surveys: Survey[]
   refresh: () => void
-  upsertSurvey: (survey: Survey) => void
+  upsertSurvey: (survey: { status: string }) => void
   deleteSurvey: (id: string) => void
   stats: {
     activeSurveys: number

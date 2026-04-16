@@ -7,11 +7,20 @@ import styles from './ResultsPage.module.scss'
 
 const BAR_COLORS = ['var(--bar-1)', 'var(--bar-2)', 'var(--bar-3)', 'var(--bar-4)']
 
+const pluralize = (n: number, forms: [string, string, string]): string => {
+  const lastTwo = n % 100
+  const lastOne = n % 10
+  
+  if (lastTwo >= 11 && lastTwo <= 19) return forms[2]
+  if (lastOne === 1) return forms[0]
+  if (lastOne >= 2 && lastOne <= 4) return forms[1]
+  return forms[2]
+}
+
 export default function ResultsPage() {
   const { id } = useParams<{ id: string }>()
   const { surveys, responsesTick } = useSurveyContext()
   const survey = useMemo(() => surveys.find((s) => s.id === id), [surveys, id])
-  const [tab, setTab] = useState<'answers' | 'summary'>('answers')
 
   const responses = useMemo(
     () => (survey ? getResponsesForSurvey(survey.id) : []),
@@ -25,34 +34,20 @@ export default function ResultsPage() {
 
   return (
     <div className={styles.page}>
-      <p className={styles.sub}>{survey.title || 'Опрос'} · {responses.length} ответов</p>
-      <div className={styles.tabs}>
-        <button type="button" onClick={() => setTab('answers')} className={tab === 'answers' ? styles.tabActive : styles.tab}>Ответы</button>
-        <button type="button" onClick={() => setTab('summary')} className={tab === 'summary' ? styles.tabActive : styles.tab}>Сводка</button>
+      <p className={styles.sub}>{survey.title || 'Опрос'} · {responses.length} {pluralize(responses.length, ['ответ', 'ответа', 'ответов'])}</p>
+      <div className={styles.stack}>
+        {survey.questions.map((q, i) => (
+          <article key={q.id} className={styles.card}>
+            <header className={styles.cardHead}>
+              <span className={styles.cardLabel}>Вопрос {i + 1}</span>
+              <span className={styles.cardMuted}>Все ответы</span>
+            </header>
+            <h3 className={styles.cardTitle}>{q.text || '—'}</h3>
+            {q.type === 'single' && <SingleStats question={q} responses={responses} total={responses.length} />}
+            {q.type === 'text' && <TextList answers={responses.map((r) => r.answers[q.id]).filter((x): x is string => Boolean(x))} />}
+          </article>
+        ))}
       </div>
-      {tab === 'answers' ? (
-        <div className={styles.stack}>
-          {survey.questions.map((q, i) => (
-            <article key={q.id} className={styles.card}>
-              <header className={styles.cardHead}>
-                <span className={styles.cardLabel}>Вопрос {i + 1}</span>
-                <span className={styles.cardMuted}>Все ответы</span>
-              </header>
-              <h3 className={styles.cardTitle}>{q.text || '—'}</h3>
-              {q.type === 'single' && <SingleStats question={q} responses={responses} total={responses.length} />}
-              {q.type === 'text' && <TextList answers={responses.map((r) => r.answers[q.id]).filter((x): x is string => Boolean(x))} />}
-            </article>
-          ))}
-        </div>
-      ) : (
-        <div className={styles.card}>
-          <ul>
-            {survey.questions.map((q) => (
-              <li key={q.id}>{q.text || '—'}: {responses.filter((r) => r.answers[q.id]).length}</li>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
   )
 }
@@ -65,13 +60,15 @@ function SingleStats({ question, responses, total }: { question: QuestionSingle;
       {opts.map((opt, i) => {
         const c = responses.filter((r) => r.answers[question.id] === opt).length
         const pct = Math.round((c / denom) * 100)
+        const displayOpt = opt.length > 100 ? opt.slice(0, 100) + '...' : opt
         return (
           <li key={opt} className={styles.barRow}>
-            <span>{opt}</span>
+            <span className={styles.radioIcon} aria-hidden />
+            <span className={styles.optionText}>{displayOpt}</span>
             <div className={styles.barTrack}>
               <div className={styles.barFill} style={{ width: `${pct}%`, background: BAR_COLORS[i % BAR_COLORS.length] }} />
             </div>
-            <span>{pct}%</span>
+            <span className={styles.percentage}>{pct}%</span>
           </li>
         )
       })}
@@ -80,27 +77,34 @@ function SingleStats({ question, responses, total }: { question: QuestionSingle;
 }
 
 function TextList({ answers }: { answers: string[] }) {
-  const grouped = useMemo(() => {
-    const m = new Map<string, number>()
-    for (const a of answers) {
-      const k = a.trim()
-      if (!k) continue
-      m.set(k, (m.get(k) ?? 0) + 1)
-    }
-    return [...m.entries()].sort((a, b) => b[1] - a[1])
-  }, [answers])
+  const [showAll, setShowAll] = useState(false)
+  
+  const displayAnswers = useMemo(() => {
+    const validAnswers = answers.filter(a => a.trim())
+    return showAll ? validAnswers : validAnswers.slice(-5)
+  }, [answers, showAll])
 
-  if (grouped.length === 0) return <p className={styles.empty}>Пока нет ответов.</p>
+  if (answers.length === 0) return <p className={styles.empty}>Пока нет ответов.</p>
 
   return (
-    <ul className={styles.textAnswers}>
-      {grouped.slice(0, 8).map(([t, c]) => (
-        <li key={t} className={styles.textRow}>
-          <span className={styles.textAvatar} aria-hidden />
-          <span className={styles.textValue}>{t}</span>
-          <span className={styles.textMeta}>♡ {c}</span>
-        </li>
-      ))}
-    </ul>
+    <div>
+      {!showAll && <h3 className={styles.latestAnswersHeader}>Последние 5 ответов:</h3>}
+      <ul className={styles.textAnswers}>
+        {displayAnswers.map((answer, index) => (
+          <li key={index} className={styles.textRow}>
+            <span className={styles.textValue}>{answer}</span>
+          </li>
+        ))}
+      </ul>
+      {answers.length > 5 && (
+        <button 
+          type="button" 
+          className={styles.showAllBtn}
+          onClick={() => setShowAll(!showAll)}
+        >
+          {showAll ? 'Скрыть ответы' : 'Показать все ответы'}
+        </button>
+      )}
+    </div>
   )
 }

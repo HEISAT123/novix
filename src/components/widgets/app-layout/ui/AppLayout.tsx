@@ -21,7 +21,7 @@ export function AppLayout() {
         <div className={styles.appTopBarLeft}>
           {showBack && (
             <Link to="/" className={styles.appTopBarBack} aria-label="На главную">
-              ←
+              <span style={{ fontSize: '30px', paddingBottom:'5px' }}>←</span>
             </Link>
           )}
           <h1 className={styles.appTopBarTitle}>{title}</h1>
@@ -51,7 +51,7 @@ export function AppLayout() {
             }
             title="Мои опросы"
           >
-            <img src={mainIcon} width={22} height={22} alt="" aria-hidden />
+            <img src={mainIcon} width={30} height={30} alt="" aria-hidden />
           </NavLink>
         </aside>
         <div className={styles.appMain}>

@@ -1,5 +1,6 @@
 .page {
   padding: 24px 28px 48px;
+  padding-top: 10px;
   max-width: 1000px;
   margin: 0 auto;
 }
@@ -32,6 +33,11 @@
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #F3F2FB;
+  resize: none;
+  min-height: 40px;
+  max-height: 280px;
+  overflow: hidden;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
 
 }
 
@@ -55,7 +61,7 @@
   border-radius: 12px;
   padding: 12px;
   margin-bottom: 12px;
-  background: #fff;
+  background: #fbf8ff;
 }
 
 .questionHead {
@@ -65,6 +71,131 @@
   justify-content: space-between;
   color: var(--muted);
   font-size: 0.9rem;
+}
+
+.questionActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.iconButton {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.iconButton:hover {
+  border-color: var(--primary-border);
+  color: var(--primary);
+  background: var(--primary-soft);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+  transform: translateY(-1px);
+}
+
+.iconButton svg {
+  width: 16px;
+  height: 16px;
+}
+
+.questionTypeSelect {
+  padding: 8px 16px;
+  border: 1px dashed var(--line);
+  border-radius: 20px;
+  background: var(--primary-soft);
+  color: #A9A5D8;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 300;
+  transition: all 0.3s ease;
+  min-width: 140px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23A9A5D8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px 8px;
+  padding-right: 40px;
+}
+
+.questionTypeSelect:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--primary-soft);
+  border-color: var(--primary-border);
+}
+
+.questionTypeSelect:hover {
+  box-shadow: 0 0 0 3px var(--primary-soft);
+  border-color: var(--primary-border);
+  transform: translateY(-1px);
+}
+
+.questionTypeMenu {
+  position: fixed;
+  background: var(--surface);
+  border: 1px dashed var(--line);
+  border-radius: 20px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 180px;
+  z-index: 1000;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(10px);
+  animation: menuFadeIn 0.3s ease;
+}
+
+.questionTypeMenu button {
+  text-align: left;
+  border: none;
+  background: var(--primary-soft);
+  padding: 12px 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  color: #A9A5D8;
+  font-weight: 300;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.questionTypeMenu button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.questionTypeMenu button:hover {
+  background: var(--primary);
+  color: #fff;
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(169, 165, 216, 0.3);
+}
+
+.questionTypeMenu button:hover::before {
+  left: 100%;
+}
+
+.questionTypeMenu button.active {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(169, 165, 216, 0.3);
 }
 
 .deleteQuestionBtn {
@@ -83,6 +214,16 @@
   border-color: #e79aa6;
   color: #cf4d66;
   background: #fff5f7;
+}
+
+
+.textAnswerPreview {
+  margin-top: 8px;
+}
+
+.textAnswerPreview .input {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .sectionTitle {
@@ -110,12 +251,19 @@
 .addOptionBtn {
   margin-top: 10px;
   background: transparent;
-  padding: 6px 4px;
+  padding: 6px 6px;
+  padding-top: 0px;
   font-weight: 500;
   cursor: pointer;
   border: 1px dashed var(--line);
+  border-radius: 3px;
   color: #A9A5D8;
   background: var(--primary-soft);
+  transition: all 0.3s ease;
+  &:hover {
+    box-shadow: 0 0 0 3px var(--primary-soft);
+    transform: translateY(-1px);
+  }
 }
 
 .optionsCounter {
@@ -135,21 +283,26 @@
   font-size: 1rem;
   line-height: 1;
   flex-shrink: 0;
+  transition: all 0.3s ease;
 }
 
 .removeOptionBtn:hover {
   border-color: #e79aa6;
   color: #cf4d66;
   background: #fff5f7;
+  box-shadow: 0 0 0 3px rgba(231, 154, 166, 0.2);
+  transform: translateY(-1px);
 }
 
 .actions {
   display: flex;
+  margin-top: 20px;
   gap: 10px;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   position: relative;
+  overflow: visible;
   &_save {
     display: flex;
     gap: 10px;
@@ -157,30 +310,69 @@
 }
 
 .menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
+  position: fixed;
+  top: auto;
+  bottom: auto;
   background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 8px;
+  border: 1px dashed var(--line);
+  border-radius: 20px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  width: 165px;
+  gap: 8px;
+  width: 180px;
+  z-index: 1000;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(10px);
+  animation: menuFadeIn 0.3s ease;
+}
+
+@keyframes menuFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .menu button {
   text-align: left;
   border: none;
-  background: transparent;
-  padding: 10px;
-  border-radius: 8px;
+  background: var(--primary-soft);
+  padding: 12px 16px;
+  border-radius: 16px;
   cursor: pointer;
+  color: #A9A5D8;
+  font-weight: 300;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.menu button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
 }
 
 .menu button:hover {
-  background: var(--surface-2);
+  background: var(--primary);
+  color: #fff;
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(169, 165, 216, 0.3);
+}
+
+.menu button:hover::before {
+  left: 100%;
 }
 
 .primaryBtn,
@@ -189,8 +381,10 @@
   font-weight: 300;
   padding: 10px 16px;
   border-radius: 7px;
+  transition: all 0.3s ease;
   &:hover {
-    box-shadow: 0 0 0 2px var(--primary-soft);
+    box-shadow: 0 0 0 3px var(--primary-soft);
+    transform: translateY(-1px);
   }
 }
 
@@ -227,4 +421,28 @@
 
 .helperLinks a:hover {
   text-decoration: underline;
+}
+
+.error {
+  background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+  border: 1px solid #f6c5c5;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-top: 20px;
+  color: #dc2626;
+  font-size: 0.95rem;
+  font-weight: 400;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.08);
+  animation: errorSlideIn 0.3s ease;
+}
+
+@keyframes errorSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
