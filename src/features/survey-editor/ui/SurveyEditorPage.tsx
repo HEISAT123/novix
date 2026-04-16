@@ -10,6 +10,7 @@ import pencilIcon from '../../../assets/pencil.svg'
 import trashcanIcon from '../../../assets/trashcan.svg'
 
 const MIN_OPTIONS = 2
+const MAX_OPTIONS = 6
 
 function normalizeSurvey(raw: Survey): Survey {
   return {
@@ -323,7 +324,7 @@ export default function SurveyEditorPage() {
                 />
               </div>
             )}
-            {q.type === 'single' && (
+            {q.type === 'single' && q.options.length < MAX_OPTIONS && (
               <button
                 type="button"
                 className={styles.addOptionBtn}
