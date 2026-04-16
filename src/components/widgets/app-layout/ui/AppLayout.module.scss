@@ -1,0 +1,142 @@
+.appShell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  background: var(--page-bg);
+}
+
+.appShellRow {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  align-items: stretch;
+}
+
+.appTopBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 70px;
+  padding: 0 22px 0 18px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+.appTopBarLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.appTopBarBack {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin-left: -4px;
+  border-radius: 10px;
+  text-decoration: none;
+}
+
+.appTopBarTitle {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: #646476;
+}
+
+.appTopBarActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.appTopBarIconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.15s ease;
+}
+
+.appTopBarIconBtn:hover {
+  background: var(--primary-soft);
+}
+
+.appTopBarAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: block;
+  border: 1px solid rgba(139, 133, 241, 0.2);
+}
+
+.sidebar {
+  width: 72px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 14px 0;
+}
+
+.sidebarLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  color: var(--muted);
+  text-decoration: none;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.sidebarLinkActive {
+  background: #eceaf7;
+  box-shadow: 0 0 0 1px rgba(139, 133, 241, 0.25);
+}
+
+.appMain {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.appMainBody {
+  flex: 1;
+  overflow: auto;
+}
+
+@media (max-width: 900px) {
+  .appTopBar {
+    min-height: 62px;
+    padding: 0 16px 0 14px;
+  }
+
+  .appTopBarTitle {
+    font-size: 1.35rem;
+  }
+
+  .sidebar {
+    width: 62px;
+  }
+
+  .sidebarLink {
+    width: 44px;
+    height: 44px;
+  }
+}
