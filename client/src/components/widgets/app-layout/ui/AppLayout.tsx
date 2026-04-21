@@ -1,6 +1,5 @@
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../../../../context/AuthProvider'
-import bellIcon from '../../../../assets/bell.svg'
 import mainIcon from '../../../../assets/mainIcon.svg'
 import profileIcon from '../../../../assets/profileIcon.png'
 import styles from './AppLayout.module.scss'
@@ -33,9 +32,6 @@ export function AppLayout() {
           <h1 className={styles.appTopBarTitle}>{title}</h1>
         </div>
         <div className={styles.appTopBarActions}>
-          <button type="button" className={styles.appTopBarIconBtn} aria-label="Уведомления">
-            <img src={bellIcon} width={20} height={20} alt="" aria-hidden />
-          </button>
           {user ? (
             <>
               <span className={styles.userName}>{user.username}</span>

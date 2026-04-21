@@ -64,12 +64,43 @@
 }
 
 .questionHead {
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: var(--muted);
-  font-size: 0.9rem;
+  gap: 12px;
+}
+
+.questionTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.questionNumber {
+  color: var(--title-color);
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+.questionInput {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  color: var(--title-color);
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+}
+
+.questionInput::placeholder {
+  color: #B6B4C6;
+}
+
+.questionInput:focus {
+  outline: none;
+  border-bottom: 1px solid var(--primary-border);
 }
 
 .questionActions {
@@ -220,9 +251,19 @@
   margin-top: 8px;
 }
 
-.textAnswerPreview .input {
+.textInput {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #F3F2FB;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
   opacity: 0.7;
   cursor: not-allowed;
+}
+
+.textInput::placeholder {
+  color: #B6B4C6;
 }
 
 .sectionTitle {
@@ -249,14 +290,13 @@
 
 .addOptionBtn {
   margin-top: 10px;
-  background: transparent;
-  padding: 8px 12px;
+  padding: 4px 12px;
   font-weight: 500;
   cursor: pointer;
-  border: 1px dashed var(--line);
-  border-radius: 8px;
-  color: #A9A5D8;
-  background: var(--primary-soft);
+  border: 2px solid var(--line);
+  border-radius: 5px;
+  color: var(--title-color);
+  background: rgb(255, 255, 255, 0);
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
@@ -381,10 +421,12 @@
 .primaryBtn,
 .outlineBtn,
 .ghostBtn {
-  font-weight: 300;
-  padding: 10px 16px;
-  border-radius: 7px;
+  font-weight: 400;
+  font-size: 0.9rem;
+  padding: 8px 30px;
+  border-radius: 5px;
   transition: all 0.3s ease;
+  cursor: pointer;
   &:hover {
     box-shadow: 0 0 0 3px var(--primary-soft);
     transform: translateY(-1px);
@@ -399,15 +441,14 @@
 
 .outlineBtn {
   border: 1px solid var(--line);
-  background: var(--surface);
+  background: #fff;
   color: var(--title-color);
 }
 
 .ghostBtn {
-  border: 1px dashed var(--line);
-  color: #A9A5D8;
-  background: var(--primary-soft);
-  padding: 10px 16px;
+  border: 1px solid var(--line);
+  color: var(--text);
+  background: #E4E0FF;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -419,6 +460,7 @@
   font-size: 25px;
   color: var(--primary);
   line-height: 1;
+  font-weight: 500;
 }
 
 .helperLinks {

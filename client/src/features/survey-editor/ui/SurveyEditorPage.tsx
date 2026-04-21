@@ -6,7 +6,6 @@ import { createEmptyQuestion, createEmptySurvey } from '../../../hooks/useSurvey
 import type { Question, Survey } from '../../../types/survey'
 import styles from './SurveyEditorPage.module.scss'
 import PublishSurveyPopup from './publish-survey-popup/PublishSurveyPopup'
-import pencilIcon from '../../../assets/pencil.svg'
 import trashcanIcon from '../../../assets/trashcan.svg'
 
 const MIN_OPTIONS = 2
@@ -196,17 +195,27 @@ export default function SurveyEditorPage() {
         {survey.questions.map((q) => (
           <div key={q.id} className={styles.question}>
             <div className={styles.questionHead}>
-              <span>Вопрос {qIndex(q)}</span>
+              <div className={styles.questionTitleRow}>
+                <span className={styles.questionNumber}>Вопрос {qIndex(q)}</span>
+                <input
+                  className={styles.questionInput}
+                  placeholder="Введите вопрос..."
+                  value={q.text}
+                  onChange={(e) =>
+                    setSurvey((s) =>
+                      s
+                        ? ({
+                            ...s,
+                            questions: s.questions.map((x) =>
+                              x.id === q.id ? ({ ...x, text: e.target.value } as Question) : x,
+                            ),
+                          })
+                        : s,
+                    )
+                  }
+                />
+              </div>
               <div className={styles.questionActions}>
-                <button
-                  type="button"
-                  className={styles.iconButton}
-                  onClick={() => {}}
-                  aria-label="Редактировать вопрос"
-                  title="Редактировать вопрос"
-                >
-                  <img src={pencilIcon} alt="Редактировать" width="16" height="16" />
-                </button>
                 <button
                   type="button"
                   className={styles.iconButton}
@@ -223,22 +232,22 @@ export default function SurveyEditorPage() {
                   {q.type === 'single' ? 'Один вариант' : 'Короткий текст'}
                 </button>
                 {openQuestionTypeMenu === q.id && (
-                  <div 
-                    className={styles.questionTypeMenu} 
+                  <div
+                    className={styles.questionTypeMenu}
                     style={{
                       top: `${questionMenuPosition.top}px`,
                       left: `${questionMenuPosition.left}px`
                     }}
                   >
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       onClick={() => handleQuestionTypeChange(q.id, 'single')}
                       className={q.type === 'single' ? styles.active : ''}
                     >
                       Один вариант
                     </button>
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       onClick={() => handleQuestionTypeChange(q.id, 'text')}
                       className={q.type === 'text' ? styles.active : ''}
                     >
@@ -248,23 +257,6 @@ export default function SurveyEditorPage() {
                 )}
               </div>
             </div>
-            <input
-              className={styles.input}
-              placeholder="Введите вопрос..."
-              value={q.text}
-              onChange={(e) =>
-                setSurvey((s) =>
-                  s
-                    ? ({
-                        ...s,
-                        questions: s.questions.map((x) =>
-                          x.id === q.id ? ({ ...x, text: e.target.value } as Question) : x,
-                        ),
-                      })
-                    : s,
-                )
-              }
-            />
             {q.type === 'single' && q.options.map((opt, i) => (
               <div key={i} className={styles.optionRow}>
                 <span className={styles.radioFake} aria-hidden />
@@ -318,7 +310,7 @@ export default function SurveyEditorPage() {
             {q.type === 'text' && (
               <div className={styles.textAnswerPreview}>
                 <input
-                  className={styles.input}
+                  className={styles.textInput}
                   placeholder="Введите ответ..."
                   disabled
                 />
@@ -367,7 +359,7 @@ export default function SurveyEditorPage() {
             </div>
           )}
           <div className={styles.actions_save}>
-          <button type="button" className={styles.outlineBtn} onClick={() => commit(survey, true)}>Сохранить</button>
+          <button type="button" className={styles.outlineBtn} onClick={() => commit(survey, true)}>Сохранить черновик</button>
           <button type="button" className={styles.primaryBtn} onClick={() => { 
               const errors = validateSurvey(survey)
               if (errors.length > 0) {

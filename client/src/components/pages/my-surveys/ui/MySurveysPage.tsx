@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import activeSurveysIcon from '../../../../assets/activeSurveys.svg'
-import myRespondentsIcon from '../../../../assets/myRespondents.svg'
 import totalResponsesIcon from '../../../../assets/totalResponses.svg'
 import { useSurveyContext } from '../../../../hooks/useSurveyContext'
 import { getResponsesForSurvey } from '../../../../lib/surveysStorage'
@@ -41,19 +40,6 @@ export default function MySurveysPage() {
             />
           }
           label={`Активных опросов: ${stats.activeSurveys}`}
-        />
-        <StatCard
-          icon={
-            <img
-              src={myRespondentsIcon}
-              width={22}
-              height={22}
-              className={styles.statCardIconImage}
-              alt=""
-              aria-hidden
-            />
-          }
-          label={`Мои респонденты: ${stats.respondents}`}
         />
         <StatCard
           icon={
