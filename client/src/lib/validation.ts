@@ -101,15 +101,48 @@ export function validateLoginForm(data: {
   password: string
 }): ValidationResult {
   const errors: ValidationError[] = []
-  
+
   if (!data.email) {
     errors.push({ field: 'email', message: 'Введите имя пользователя' })
   }
-  
+
   if (!data.password) {
     errors.push({ field: 'password', message: 'Введите пароль' })
   }
-  
+
+  return {
+    isValid: errors.length === 0,
+    errors,
+  }
+}
+
+export function validateAnswer(answer: string, questionId: string): ValidationError | null {
+  if (!answer || !answer.trim()) {
+    return { field: questionId, message: 'Пожалуйста, ответьте на вопрос' }
+  }
+
+  if (answer.trim().length > 1000) {
+    return { field: questionId, message: 'Ответ не может превышать 1000 символов' }
+  }
+
+  return null
+}
+
+export function validateSurveyForm(answers: Record<string, string>, questions: Array<{ id: string; type: string }>): ValidationResult {
+  const errors: ValidationError[] = []
+
+  questions.forEach((question) => {
+    const answer = answers[question.id]
+    if (question.type === 'text') {
+      const error = validateAnswer(answer || '', question.id)
+      if (error) errors.push(error)
+    } else if (question.type === 'single') {
+      if (!answer) {
+        errors.push({ field: question.id, message: 'Выберите вариант ответа' })
+      }
+    }
+  })
+
   return {
     isValid: errors.length === 0,
     errors,

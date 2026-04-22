@@ -1,6 +1,6 @@
 import { type FormEvent, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../../../../context/AuthProvider'
+import { useAuth } from '../../../../context/useAuth'
 import { validateEmail, validatePassword, validateLoginForm, type ValidationError } from '../../../../lib/validation'
 import styles from './LoginPage.module.scss'
 

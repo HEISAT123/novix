@@ -1,5 +1,5 @@
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
-import { useAuth } from '../../../../context/AuthProvider'
+import { useAuth } from '../../../../context/useAuth'
 import mainIcon from '../../../../assets/mainIcon.svg'
 import profileIcon from '../../../../assets/profileIcon.png'
 import styles from './AppLayout.module.scss'

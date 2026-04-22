@@ -20,10 +20,10 @@
   height: 80px;
   margin: 0 auto 24px;
   border-radius: 50%;
-  background: #9da2e7;
+  background: var(--icon-bg);
   display: grid;
   place-items: center;
-  color: #fff;
+  color: var(--white);
   font-size: 2rem;
 
   svg {
@@ -33,18 +33,22 @@
 }
 
 .title {
-  margin: 0 0 12px;
+  margin: 0 0 100px;
   font-size: 2rem;
   white-space: nowrap;
 }
 
 .homeLink {
-  color: var(--muted);
+  background: #C5C3E6;
+  color: #4a4a4a;
   text-decoration: none;
   font-size: 0.95rem;
+  padding: 8px 50px;
+  border-radius: 4px;
+  transition: background 0.2s ease;
 }
 
 .homeLink:hover {
-  color: var(--primary);
-  text-decoration: underline;
+  background: #a4a1e2;
+  text-decoration: none;
 }

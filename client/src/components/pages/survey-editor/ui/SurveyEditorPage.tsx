@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import React from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { useSurveyContext } from '../../../hooks/useSurveyContext'
-import { createEmptyQuestion, createEmptySurvey } from '../../../hooks/useSurveys'
-import type { Question, Survey } from '../../../types/survey'
+import { useSurveyContext } from '../../../../hooks/useSurveyContext'
+import { createEmptyQuestion, createEmptySurvey } from '../../../../hooks/useSurveys'
+import type { Question, Survey } from '../../../../types/survey'
 import styles from './SurveyEditorPage.module.scss'
-import PublishSurveyPopup from './publish-survey-popup/PublishSurveyPopup'
-import trashcanIcon from '../../../assets/trashcan.svg'
+import PublishSurveyPopup from '../../../popup/publish-survey-popup/PublishSurveyPopup'
+import SaveSurveyPopup from '../../../popup/save-survey-popup/SaveSurveyPopup'
+import trashcanIcon from '../../../../assets/trashcan.svg'
 
 const MIN_OPTIONS = 2
 const MAX_OPTIONS = 6
@@ -16,7 +17,7 @@ function normalizeSurvey(raw: Survey): Survey {
     ...raw,
     questions: raw.questions.map((q) => {
       if (q.type !== 'single') return q
-      let opts = [...(q.options || [])].map((o) => String(o))
+      const opts = [...(q.options || [])].map((o) => String(o))
       while (opts.length < MIN_OPTIONS) opts.push('')
       return { ...q, options: opts }
     }),
@@ -65,13 +66,11 @@ export default function SurveyEditorPage() {
   const navigate = useNavigate()
   const { surveys, upsertSurvey } = useSurveyContext()
   const [addMenuOpen, setAddMenuOpen] = useState(false)
-  const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 })
-  const addButtonRef = React.useRef<HTMLButtonElement>(null)
   const [openQuestionTypeMenu, setOpenQuestionTypeMenu] = useState<string | null>(null)
-  const [questionMenuPosition, setQuestionMenuPosition] = useState({ top: 0, left: 0 })
   const descriptionRef = React.useRef<HTMLTextAreaElement>(null)
   const [showPublishPopup, setShowPublishPopup] = useState(false)
   const [publishedSurveyLink, setPublishedSurveyLink] = useState('')
+  const [showSavePopup, setShowSavePopup] = useState(false)
   const [validationError, setValidationError] = useState('')
 
   const fromStore = useMemo(() => {
@@ -90,27 +89,11 @@ export default function SurveyEditorPage() {
     }
   }, [survey?.description])
 
-  useEffect(() => {
-    setValidationError('')
-  }, [survey])
-
   const handleAddMenuToggle = () => {
-    if (addButtonRef.current) {
-      const rect = addButtonRef.current.getBoundingClientRect()
-      setMenuPosition({
-        top: rect.bottom + 5,
-        left: rect.left
-      })
-    }
     setAddMenuOpen(!addMenuOpen)
   }
 
-  const handleQuestionTypeMenuToggle = (questionId: string, event: React.MouseEvent) => {
-    const rect = (event.target as HTMLElement).getBoundingClientRect()
-    setQuestionMenuPosition({
-      top: rect.bottom + 5,
-      left: rect.left
-    })
+  const handleQuestionTypeMenuToggle = (questionId: string) => {
     setOpenQuestionTypeMenu(openQuestionTypeMenu === questionId ? null : questionId)
   }
 
@@ -139,6 +122,7 @@ export default function SurveyEditorPage() {
     const normalized = normalizeSurvey(next)
     upsertSurvey(normalized)
     if (replaceId && id === 'new') navigate(`/edit/${normalized.id}`, { replace: true })
+    setShowSavePopup(true)
   }, [id, navigate, upsertSurvey])
 
   if (id !== 'new' && !loadedSurvey) return <div className={styles.page}><Link to="/">Опрос не найден</Link></div>
@@ -201,6 +185,7 @@ export default function SurveyEditorPage() {
                   className={styles.questionInput}
                   placeholder="Введите вопрос..."
                   value={q.text}
+                  maxLength={100}
                   onChange={(e) =>
                     setSurvey((s) =>
                       s
@@ -223,97 +208,95 @@ export default function SurveyEditorPage() {
                   aria-label="Удалить вопрос"
                   title="Удалить вопрос"
                 >
-                  <img src={trashcanIcon} alt="Удалить" width="16" height="16" />
+                  <img src={trashcanIcon} alt="Удалить" width="20" height="20" />
                 </button>
-                <button
-                  className={styles.questionTypeSelect}
-                  onClick={(e) => handleQuestionTypeMenuToggle(q.id, e)}
-                >
-                  {q.type === 'single' ? 'Один вариант' : 'Короткий текст'}
-                </button>
-                {openQuestionTypeMenu === q.id && (
-                  <div
-                    className={styles.questionTypeMenu}
-                    style={{
-                      top: `${questionMenuPosition.top}px`,
-                      left: `${questionMenuPosition.left}px`
-                    }}
+                <div className={styles.questionTypeSelectWrapper}>
+                  <button
+                    className={styles.questionTypeSelect}
+                    onClick={() => handleQuestionTypeMenuToggle(q.id)}
                   >
-                    <button
-                      type="button"
-                      onClick={() => handleQuestionTypeChange(q.id, 'single')}
-                      className={q.type === 'single' ? styles.active : ''}
-                    >
-                      Один вариант
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleQuestionTypeChange(q.id, 'text')}
-                      className={q.type === 'text' ? styles.active : ''}
-                    >
-                      Короткий текст
-                    </button>
-                  </div>
-                )}
+                    {q.type === 'single' ? 'Один вариант' : 'Короткий текст'}
+                  </button>
+                  {openQuestionTypeMenu === q.id && (
+                    <div className={styles.questionTypeMenu}>
+                      <button
+                        type="button"
+                        onClick={() => handleQuestionTypeChange(q.id, 'single')}
+                        className={q.type === 'single' ? styles.active : ''}
+                      >
+                        Один вариант
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleQuestionTypeChange(q.id, 'text')}
+                        className={q.type === 'text' ? styles.active : ''}
+                      >
+                        Короткий текст
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-            {q.type === 'single' && q.options.map((opt, i) => (
-              <div key={i} className={styles.optionRow}>
-                <span className={styles.radioFake} aria-hidden />
-                <input
-                  className={styles.input}
-                  value={opt}
-                  placeholder={`Вариант ${i + 1}`}
-                  maxLength={100}
-                  onChange={(e) =>
-                    setSurvey((s) =>
-                      s
-                        ? ({
-                            ...s,
-                            questions: s.questions.map((x) => {
-                              if (x.id !== q.id || x.type !== 'single') return x
-                              const next = [...x.options]
-                              next[i] = e.target.value
-                              return { ...x, options: next }
-                            }),
-                          })
-                        : s,
-                    )
-                  }
-                />
-                {q.options.length > MIN_OPTIONS && (
-                  <button
-                    type="button"
-                    className={styles.removeOptionBtn}
-                    onClick={() =>
-                      setSurvey((s) =>
-                        s
-                          ? ({
-                              ...s,
-                              questions: s.questions.map((x) => {
-                                if (x.id !== q.id || x.type !== 'single') return x
-                                if (x.options.length <= MIN_OPTIONS) return x
-                                return { ...x, options: x.options.filter((_, idx) => idx !== i) }
-                              }),
-                            })
-                          : s,
-                      )
-                    }
-                    aria-label="Удалить вариант"
-                    title="Удалить вариант"
-                  >
-                    ×
-                  </button>
-                )}
+            {q.type === 'single' && (
+              <div className={styles.optionsList}>
+                {q.options.map((opt, i) => (
+                  <div key={i} className={styles.optionRow}>
+                    <span className={styles.radioFake} aria-hidden />
+                    <input
+                      className={styles.optionInput}
+                      value={opt}
+                      placeholder={`Вариант ${i + 1}`}
+                      maxLength={100}
+                      onChange={(e) =>
+                        setSurvey((s) =>
+                          s
+                            ? ({
+                                ...s,
+                                questions: s.questions.map((x) => {
+                                  if (x.id !== q.id || x.type !== 'single') return x
+                                  const next = [...x.options]
+                                  next[i] = e.target.value
+                                  return { ...x, options: next }
+                                }),
+                              })
+                            : s,
+                        )
+                      }
+                    />
+                    {q.options.length > MIN_OPTIONS && (
+                      <button
+                        type="button"
+                        className={styles.removeOptionBtn}
+                        onClick={() =>
+                          setSurvey((s) =>
+                            s
+                              ? ({
+                                  ...s,
+                                  questions: s.questions.map((x) => {
+                                    if (x.id !== q.id || x.type !== 'single') return x
+                                    const next = x.options.filter((_, idx) => idx !== i)
+                                    return { ...x, options: next }
+                                  }),
+                                })
+                              : s,
+                          )
+                        }
+                        aria-label="Удалить вариант"
+                        title="Удалить вариант"
+                      >
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M4 4L12 12M4 12L12 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                        </svg>
+                      </button>
+                    )}
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
             {q.type === 'text' && (
               <div className={styles.textAnswerPreview}>
-                <input
-                  className={styles.textInput}
-                  placeholder="Введите ответ..."
-                  disabled
-                />
+                <div className={styles.textInputPlaceholder}>Введите ответ...</div>
               </div>
             )}
             {q.type === 'single' && q.options.length < MAX_OPTIONS && (
@@ -334,30 +317,28 @@ export default function SurveyEditorPage() {
                   )
                 }
               >
-                <span className={styles.plusIcon}>+</span> Добавить вариант
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10 5V15M5 10H15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
+                Добавить вариант
               </button>
             )}
           </div>
         ))}
         <div className={styles.actions}>
-          <button 
-            ref={addButtonRef}
-            type="button" 
-            className={styles.ghostBtn} 
-            onClick={handleAddMenuToggle}
-          ><span className={styles.plusIcon}>+</span> Добавить вопрос</button>
-          {addMenuOpen && (
-            <div 
-              className={styles.menu} 
-              style={{
-                top: `${menuPosition.top}px`,
-                left: `${menuPosition.left}px`
-              }}
-            >
-              <button type="button" onClick={() => { setSurvey((s) => s ? ({ ...s, questions: [...s.questions, createEmptyQuestion('single')] }) : s); setAddMenuOpen(false); }}>Один вариант</button>
-              <button type="button" onClick={() => { setSurvey((s) => s ? ({ ...s, questions: [...s.questions, createEmptyQuestion('text')] }) : s); setAddMenuOpen(false); }}>Текстовый ответ</button>
-            </div>
-          )}
+          <div className={styles.addQuestionWrapper}>
+            <button
+              type="button"
+              className={styles.ghostBtn}
+              onClick={handleAddMenuToggle}
+            ><span className={styles.plusIcon}>+</span> Добавить вопрос</button>
+            {addMenuOpen && (
+              <div className={styles.menu}>
+                <button type="button" onClick={() => { setSurvey((s) => s ? ({ ...s, questions: [...s.questions, createEmptyQuestion('single')] }) : s); setAddMenuOpen(false); }}>Один вариант</button>
+                <button type="button" onClick={() => { setSurvey((s) => s ? ({ ...s, questions: [...s.questions, createEmptyQuestion('text')] }) : s); setAddMenuOpen(false); }}>Текстовый ответ</button>
+              </div>
+            )}
+          </div>
           <div className={styles.actions_save}>
           <button type="button" className={styles.outlineBtn} onClick={() => commit(survey, true)}>Сохранить черновик</button>
           <button type="button" className={styles.primaryBtn} onClick={() => { 
@@ -368,7 +349,7 @@ export default function SurveyEditorPage() {
               }
               
               setValidationError('')
-              const publishedSurvey = { ...survey, status: 'published' }
+              const publishedSurvey = { ...survey, status: 'published' as const }
               upsertSurvey(publishedSurvey)
               setPublishedSurveyLink(`${window.location.origin}/survey/${publishedSurvey.id}`)
               setShowPublishPopup(true)
@@ -390,6 +371,11 @@ export default function SurveyEditorPage() {
         <PublishSurveyPopup
           surveyLink={publishedSurveyLink}
           onClose={() => setShowPublishPopup(false)}
+        />
+      )}
+      {showSavePopup && (
+        <SaveSurveyPopup
+          onClose={() => setShowSavePopup(false)}
         />
       )}
     </div>

@@ -1,25 +1,19 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
-import { getCurrentUser, loginUser, logoutUser, registerUser, type User } from '../lib/authStorage'
-
-interface AuthContextValue {
-  user: User | null
-  login: (email: string, password: string) => Promise<void>
-  register: (email: string, password: string, name: string) => Promise<void>
-  logout: () => void
-  isLoading: boolean
-}
-
-const AuthContext = createContext<AuthContextValue | undefined>(undefined)
+import { useEffect, useState, type ReactNode } from 'react'
+import { getCurrentUser, loginUser, logoutUser, registerUser } from '../lib/authStorage'
+import type { User } from '../types/user'
+import { AuthContext } from './auth-context'
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     const currentUser = getCurrentUser()
     setUser(currentUser)
     setIsLoading(false)
   }, [])
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const login = async (email: string, password: string) => {
     const loggedInUser = await loginUser(email, password)
@@ -43,10 +37,3 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
 }
 
-export function useAuth() {
-  const context = useContext(AuthContext)
-  if (!context) {
-    throw new Error('useAuth must be used within AuthProvider')
-  }
-  return context
-}

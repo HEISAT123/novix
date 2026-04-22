@@ -7,7 +7,7 @@ import MySurveysPage from '../components/pages/my-surveys'
 import PublicSurveyPage from '../components/pages/public-survey'
 import RegisterPage from '../components/pages/register'
 import ResultsPage from '../components/pages/results'
-import SurveyEditorRoute from '../features/survey-editor/SurveyEditorRoute'
+import SurveyEditorRoute from '../components/pages/survey-editor/SurveyEditorRoute'
 import ThankYouPage from '../components/pages/thank-you'
 
 export default function App() {

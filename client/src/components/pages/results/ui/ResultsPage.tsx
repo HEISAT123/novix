@@ -40,9 +40,8 @@ export default function ResultsPage() {
           <article key={q.id} className={styles.card}>
             <header className={styles.cardHead}>
               <span className={styles.cardLabel}>Вопрос {i + 1}</span>
-              <span className={styles.cardMuted}>Все ответы</span>
+              <h3 className={styles.cardTitle}>{q.text || '—'}</h3>
             </header>
-            <h3 className={styles.cardTitle}>{q.text || '—'}</h3>
             {q.type === 'single' && <SingleStats question={q} responses={responses} total={responses.length} />}
             {q.type === 'text' && <TextList answers={responses.map((r) => r.answers[q.id]).filter((x): x is string => Boolean(x))} />}
           </article>
@@ -97,13 +96,15 @@ function TextList({ answers }: { answers: string[] }) {
         ))}
       </ul>
       {answers.length > 5 && (
-        <button 
-          type="button" 
-          className={styles.showAllBtn}
-          onClick={() => setShowAll(!showAll)}
-        >
-          {showAll ? 'Скрыть ответы' : 'Показать все ответы'}
-        </button>
+        <div className={styles.showAllBtnWrapper}>
+          <button 
+            type="button" 
+            className={styles.showAllBtn}
+            onClick={() => setShowAll(!showAll)}
+          >
+            {showAll ? 'Скрыть ответы' : 'Показать все ответы'}
+          </button>
+        </div>
       )}
     </div>
   )

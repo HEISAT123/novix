@@ -47,7 +47,7 @@
   font-size: 1.3rem;
   font-weight: 400;
   letter-spacing: -0.02em;
-  color: #646476;
+  color: var(--title-muted);
 }
 
 .appTopBarActions {
@@ -79,7 +79,7 @@
   height: 36px;
   border-radius: 50%;
   display: block;
-  border: 1px solid rgba(139, 133, 241, 0.2);
+  border: 1px solid var(--avatar-border);
 }
 
 .userName {
@@ -97,7 +97,7 @@
   border: none;
   border-radius: 10px;
   background: var(--primary);
-  color: #fff;
+  color: var(--white);
   font-weight: 500;
   font-size: 0.9rem;
   text-decoration: none;
@@ -106,7 +106,7 @@
 }
 
 .loginBtn:hover {
-  background: #7a74e0;
+  background: var(--primary-hover);
 }
 
 .logoutBtn {
@@ -151,8 +151,8 @@
 }
 
 .sidebarLinkActive {
-  background: #eceaf7;
-  box-shadow: 0 0 0 1px rgba(139, 133, 241, 0.25);
+  background: var(--sidebar-active);
+  box-shadow: 0 0 0 1px var(--sidebar-active-shadow);
 }
 
 .appMain {

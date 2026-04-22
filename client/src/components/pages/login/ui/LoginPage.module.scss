@@ -11,7 +11,7 @@
 .card {
   width: 100%;
   max-width: 440px;
-  background: #F6F2FC;
+  background: var(--card-bg);
   border: 1px solid var(--line);
   border-radius: 16px;
   padding: 32px 28px;
@@ -33,10 +33,10 @@
 
 .error {
   padding: 12px 16px;
-  background: #fee2e2;
-  border: 1px solid #fecaca;
+  background: var(--error-bg);
+  border: 1px solid var(--error-border);
   border-radius: 10px;
-  color: #dc2626;
+  color: var(--error);
   font-size: 0.9rem;
   margin-bottom: 20px;
 }
@@ -58,7 +58,7 @@
   padding: 12px 14px;
   border: 1px solid var(--line);
   border-radius: 11px;
-  background: #F3F2FB;
+  background: var(--input-bg);
   font-size: 1rem;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
@@ -66,7 +66,7 @@
 .input:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(139, 133, 241, 0.15);
+  box-shadow: 0 0 0 3px var(--primary-shadow-light);
 }
 
 .input::placeholder {
@@ -74,11 +74,11 @@
 }
 
 .inputError {
-  border-color: #dc2626 !important;
+  border-color: var(--error) !important;
 }
 
 .inputError:focus {
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15) !important;
+  box-shadow: 0 0 0 3px var(--error-shadow-light);
 }
 
 .fieldError {
@@ -86,7 +86,7 @@
   margin-top: 6px;
   padding: 4px 0;
   font-size: 0.85rem;
-  color: #dc2626;
+  color: var(--error);
   font-weight: 500;
   line-height: 1.4;
   animation: slideDown 0.2s ease-out;
@@ -116,7 +116,7 @@
   border: none;
   border-radius: 11px;
   background: var(--primary);
-  color: #fff;
+  color: var(--white);
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.15s ease;
@@ -124,7 +124,7 @@
 }
 
 .primaryBtn:hover:not(:disabled) {
-  background: #7a74e0;
+  background: var(--primary-hover);
 }
 
 .primaryBtn:disabled {
@@ -147,6 +147,6 @@
 }
 
 .link:hover {
-  color: #7a74e0;
+  color: var(--primary-hover);
   text-decoration: underline;
 }

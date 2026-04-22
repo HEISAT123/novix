@@ -15,7 +15,7 @@ export default function ThankYouPage() {
           <CheckIcon />
         </div>
         <h1 className={styles.title}>Спасибо за прохождение!</h1>
-        <Link to="/" className={styles.homeLink}>На главную</Link>
+        <Link to="/" className={styles.homeLink}>На главный</Link>
       </div>
     </div>
   )

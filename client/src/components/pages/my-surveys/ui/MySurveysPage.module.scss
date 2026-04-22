@@ -13,7 +13,7 @@
 }
 
 .statCard {
-  background: #F0EEFC;
+  background: var(--surface);
   width: 250px;
   height: 80px;
   border: 1px solid var(--line);
@@ -104,9 +104,8 @@
 }
 
 .deleteBtn:hover {
-  border-color: #e79aa6;
-  color: #cf4d66;
-  background: #fff5f7;
+  border-color: var(--delete-btn-border);
+  background: var(--white);
 }
 
 .badgeOk,
@@ -118,8 +117,8 @@
 }
 
 .badgeOk {
-  background: #75C892;
-  color: #B0EEC6;
+  background: var(--success);
+  color: var(--success-text);
 }
 
 .badgeMuted {
@@ -136,20 +135,20 @@
 .primaryBtn {
   font-weight: 600;
   padding: 13px 22px;
-  border-radius: 5px;
+  border-radius: 4px;
   text-decoration: none;
   background: var(--primary);
   &:hover {
     border-color: var(--primary-border);
     box-shadow: var(--shadow-md);
   }
-  color: #fff;
+  color: var(--white);
   min-width: min(100%, 320px);
   text-align: center;
 }
 
 .emptyHint {
-  color: var(--muted);
+  color: var(--empty-hint);
 }
 
 @media (max-width: 900px) {
