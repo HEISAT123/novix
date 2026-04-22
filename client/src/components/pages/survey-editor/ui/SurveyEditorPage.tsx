@@ -103,7 +103,13 @@ export default function SurveyEditorPage() {
         ? ({
             ...s,
             questions: s.questions.map((x) =>
-              x.id === questionId ? ({ ...x, type: newType } as Question) : x,
+              x.id === questionId
+                ? ({
+                    ...x,
+                    type: newType,
+                    ...(newType === 'single' ? { options: ['', ''] } : {}),
+                  } as Question)
+                : x,
             ),
           })
         : s,
