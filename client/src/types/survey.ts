@@ -17,9 +17,11 @@ export type Question = QuestionSingle | QuestionText
 
 export type Survey = {
   id: string
+  public_id: string | null
   title: string
   description: string
   status: SurveyStatus
+  created_at?: string
   questions: Question[]
 }
 

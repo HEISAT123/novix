@@ -1,9 +1,14 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useSurveyContext } from '../../../../hooks/useSurveyContext'
-import { getResponsesForSurvey } from '../../../../lib/surveysStorage'
-import type { QuestionSingle, SurveyResponseRow } from '../../../../types/survey'
+import type { AnswersMap, QuestionSingle, Survey } from '../../../../types/survey'
 import styles from './ResultsPage.module.scss'
+
+interface ApiResponse {
+  id: string
+  submitted_at: string
+  answers: AnswersMap
+}
 
 const BAR_COLORS = ['var(--bar-1)', 'var(--bar-2)', 'var(--bar-3)', 'var(--bar-4)']
 
@@ -19,15 +24,51 @@ const pluralize = (n: number, forms: [string, string, string]): string => {
 
 export default function ResultsPage() {
   const { id } = useParams<{ id: string }>()
-  const { surveys, responsesTick } = useSurveyContext()
-  const survey = useMemo(() => surveys.find((s) => s.id === id), [surveys, id])
+  const { surveys, getSurveyById, getResponses } = useSurveyContext()
+  const [survey, setSurvey] = useState<Survey | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [responses, setResponses] = useState<ApiResponse[]>([])
 
-  const responses = useMemo(
-    () => (survey ? getResponsesForSurvey(survey.id) : []),
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- tick нужен для обновления ответов
-    [survey, responsesTick],
-  )
+  useEffect(() => {
+    const loadSurvey = async () => {
+      if (!id) return
 
+      setIsLoading(true)
+      const foundInList = surveys.find((s) => s.id === id || s.public_id === id)
+      if (foundInList && foundInList.questions.length > 0) {
+        setSurvey(foundInList)
+      } else if (foundInList) {
+        const fullSurvey = await getSurveyById(foundInList.id)
+        if (fullSurvey) {
+          setSurvey(fullSurvey)
+        }
+      } else {
+        const fullSurvey = await getSurveyById(id)
+        if (fullSurvey) {
+          setSurvey(fullSurvey)
+        }
+      }
+      setIsLoading(false)
+    }
+    loadSurvey()
+  }, [id, surveys, getSurveyById])
+
+  useEffect(() => {
+    const loadResponses = async () => {
+      if (!survey) return
+
+      try {
+        const apiResponses = await getResponses(survey.id)
+        setResponses(apiResponses)
+      } catch (error) {
+        console.error('Failed to load responses:', error)
+        setResponses([])
+      }
+    }
+    loadResponses()
+  }, [survey, getResponses])
+
+  if (isLoading) return <div className={styles.page}>Загрузка…</div>
   if (!survey) {
     return <div className={styles.page}><Link to="/">Опрос не найден. На главную</Link></div>
   }
@@ -51,7 +92,7 @@ export default function ResultsPage() {
   )
 }
 
-function SingleStats({ question, responses, total }: { question: QuestionSingle; responses: SurveyResponseRow[]; total: number }) {
+function SingleStats({ question, responses, total }: { question: QuestionSingle; responses: ApiResponse[]; total: number }) {
   const opts = question.options.map((o) => o.trim()).filter(Boolean)
   const denom = total || 1
   return (

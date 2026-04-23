@@ -1,19 +1,37 @@
-import { type FormEvent, useMemo, useState } from 'react'
+import { type FormEvent, useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { useSurveyContext } from '../../../../hooks/useSurveyContext'
-import { appendResponse } from '../../../../lib/surveysStorage'
+import { getPublicSurvey, submitPublicResponse } from '../../../../api/surveysApi'
+import { convertApiSurveyToSurvey } from '../../../../api/surveysApi'
 import { validateAnswer, validateSurveyForm, type ValidationError } from '../../../../lib/validation'
-import type { AnswersMap } from '../../../../types/survey'
+import type { AnswersMap, Survey } from '../../../../types/survey'
 import styles from './PublicSurveyPage.module.scss'
 
 export default function PublicSurveyPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { surveys } = useSurveyContext()
-  const survey = useMemo(() => surveys.find((s) => s.id === id), [surveys, id])
+  const [survey, setSurvey] = useState<Survey | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [isSurveyLoading, setIsSurveyLoading] = useState(true)
   const [answers, setAnswers] = useState<AnswersMap>({})
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    const loadSurvey = async () => {
+      if (!id) return
+
+      setIsSurveyLoading(true)
+      try {
+        const apiSurvey = await getPublicSurvey(id)
+        setSurvey(convertApiSurveyToSurvey(apiSurvey))
+      } catch (error) {
+        console.error('Failed to load public survey:', error)
+        setSurvey(null)
+      } finally {
+        setIsSurveyLoading(false)
+      }
+    }
+    loadSurvey()
+  }, [id])
 
   const setAnswer = (qid: string, value: string) => {
     setAnswers((a) => ({ ...a, [qid]: value }))
@@ -62,7 +80,7 @@ export default function PublicSurveyPage() {
     setIsLoading(true)
 
     try {
-      appendResponse(survey.id, answers)
+      await submitPublicResponse(survey.public_id || survey.id, { answers })
       navigate(`/survey/${survey.id}/thanks`, { replace: true })
     } catch (err) {
       setErrors({ form: err instanceof Error ? err.message : 'Ошибка при отправке ответов' })
@@ -71,6 +89,7 @@ export default function PublicSurveyPage() {
     }
   }
 
+  if (isSurveyLoading) return <div className={styles.note}>Загрузка…</div>
   if (!survey) return <div className={styles.note}><Link to="/">Опрос не найден. На главную</Link></div>
   if (survey.status !== 'published') return <div className={styles.note}><Link to="/">Опрос не опубликован. На главную</Link></div>
 

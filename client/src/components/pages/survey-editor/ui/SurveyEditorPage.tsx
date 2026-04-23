@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import React from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useSurveyContext } from '../../../../hooks/useSurveyContext'
@@ -12,11 +12,15 @@ import trashcanIcon from '../../../../assets/trashcan.svg'
 const MIN_OPTIONS = 2
 const MAX_OPTIONS = 6
 
+function isSingleQuestion(question: Question): question is Question & { type: 'single'; options: string[] } {
+  return question.type === 'single'
+}
+
 function normalizeSurvey(raw: Survey): Survey {
   return {
     ...raw,
     questions: raw.questions.map((q) => {
-      if (q.type !== 'single') return q
+      if (!isSingleQuestion(q)) return q
       const opts = [...(q.options || [])].map((o) => String(o))
       while (opts.length < MIN_OPTIONS) opts.push('')
       return { ...q, options: opts }
@@ -44,8 +48,8 @@ const validateSurvey = (survey: Survey): string[] => {
     if (!question.text.trim()) {
       errors.push(`Вопрос ${index + 1} не может быть пустым`)
     }
-    
-    if (question.type === 'single') {
+
+    if (isSingleQuestion(question)) {
       const nonEmptyOptions = question.options.filter(opt => opt.trim())
       if (nonEmptyOptions.length < 2) {
         errors.push(`Вопрос ${index + 1} должен иметь хотя бы 2 непустых варианта ответа`)
@@ -64,7 +68,7 @@ const validateSurvey = (survey: Survey): string[] => {
 export default function SurveyEditorPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { surveys, upsertSurvey } = useSurveyContext()
+  const { upsertSurvey, getSurveyById, addQuestion, updateQuestion, deleteQuestion } = useSurveyContext()
   const [addMenuOpen, setAddMenuOpen] = useState(false)
   const [openQuestionTypeMenu, setOpenQuestionTypeMenu] = useState<string | null>(null)
   const descriptionRef = React.useRef<HTMLTextAreaElement>(null)
@@ -72,16 +76,31 @@ export default function SurveyEditorPage() {
   const [publishedSurveyLink, setPublishedSurveyLink] = useState('')
   const [showSavePopup, setShowSavePopup] = useState(false)
   const [validationError, setValidationError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
+  const [survey, setSurvey] = useState<Survey | null>(null)
 
-  const fromStore = useMemo(() => {
-    if (id === 'new') return null
-    const found = surveys.find((s) => s.id === id)
-    return found ? normalizeSurvey(found) : null
-  }, [id, surveys])
+  useEffect(() => {
+    const loadSurvey = async () => {
+      if (id === 'new') {
+        setSurvey(createEmptySurvey())
+        setIsLoading(false)
+        return
+      }
 
-  const newSurvey = useMemo(() => createEmptySurvey(), [])
-  const loadedSurvey: Survey | null = id === 'new' ? newSurvey : fromStore
-  const [survey, setSurvey] = useState<Survey | null>(() => loadedSurvey)
+      if (id) {
+        setIsLoading(true)
+        const fullSurvey = await getSurveyById(id)
+        if (fullSurvey) {
+          setSurvey(normalizeSurvey(fullSurvey))
+        } else {
+          setSurvey(null)
+        }
+        setIsLoading(false)
+      }
+    }
+    loadSurvey()
+  }, [id, getSurveyById])
 
   useEffect(() => {
     if (descriptionRef.current) {
@@ -117,21 +136,61 @@ export default function SurveyEditorPage() {
     setOpenQuestionTypeMenu(null)
   }
 
-  const commit = useCallback((next: Survey, replaceId: boolean) => {
+  const commit = useCallback(async (next: Survey, replaceId: boolean) => {
     const errors = validateSurvey(next)
     if (errors.length > 0) {
       setValidationError(errors[0])
       return
     }
-    
-    setValidationError('')
-    const normalized = normalizeSurvey(next)
-    upsertSurvey(normalized)
-    if (replaceId && id === 'new') navigate(`/edit/${normalized.id}`, { replace: true })
-    setShowSavePopup(true)
-  }, [id, navigate, upsertSurvey])
 
-  if (id !== 'new' && !loadedSurvey) return <div className={styles.page}><Link to="/">Опрос не найден</Link></div>
+    setValidationError('')
+    setIsSaving(true)
+
+    try {
+      const normalized = normalizeSurvey(next)
+      const surveyId = await upsertSurvey(normalized)
+
+      if (replaceId && id === 'new') {
+        navigate(`/edit/${surveyId}`, { replace: true })
+      }
+
+      // Синхронизация вопросов с API
+      const existingQuestions = survey?.questions || []
+      const newQuestions = normalized.questions
+
+      // Удаление вопросов, которых нет в новой версии
+      for (const existingQ of existingQuestions) {
+        if (!newQuestions.find(nq => nq.id === existingQ.id)) {
+          await deleteQuestion(surveyId, existingQ.id)
+        }
+      }
+
+      // Добавление или обновление вопросов
+      for (const question of newQuestions) {
+        const existingQ = existingQuestions.find(eq => eq.id === question.id)
+        if (!existingQ) {
+          await addQuestion(surveyId, question)
+        } else if (JSON.stringify(existingQ) !== JSON.stringify(question)) {
+          await updateQuestion(surveyId, question.id, question)
+        }
+      }
+
+      // Перезагрузка опроса с обновлёнными вопросами
+      const updatedSurvey = await getSurveyById(surveyId)
+      if (updatedSurvey) {
+        setSurvey(normalizeSurvey(updatedSurvey))
+      }
+
+      setShowSavePopup(true)
+    } catch (error) {
+      setValidationError('Ошибка при сохранении. Попробуйте снова.')
+      console.error('Save error:', error)
+    } finally {
+      setIsSaving(false)
+    }
+  }, [id, navigate, upsertSurvey, survey, addQuestion, updateQuestion, deleteQuestion, getSurveyById])
+
+  if (!survey && !isLoading) return <div className={styles.page}><Link to="/">Опрос не найден</Link></div>
   if (!survey) return <div className={styles.page}>Загрузка…</div>
 
   const qIndex = (q: Question) => survey.questions.indexOf(q) + 1
@@ -260,7 +319,7 @@ export default function SurveyEditorPage() {
                             ? ({
                                 ...s,
                                 questions: s.questions.map((x) => {
-                                  if (x.id !== q.id || x.type !== 'single') return x
+                                  if (x.id !== q.id || !isSingleQuestion(x)) return x
                                   const next = [...x.options]
                                   next[i] = e.target.value
                                   return { ...x, options: next }
@@ -280,7 +339,7 @@ export default function SurveyEditorPage() {
                               ? ({
                                   ...s,
                                   questions: s.questions.map((x) => {
-                                    if (x.id !== q.id || x.type !== 'single') return x
+                                    if (x.id !== q.id || !isSingleQuestion(x)) return x
                                     const next = x.options.filter((_, idx) => idx !== i)
                                     return { ...x, options: next }
                                   }),
@@ -315,7 +374,7 @@ export default function SurveyEditorPage() {
                       ? ({
                           ...s,
                           questions: s.questions.map((x) => {
-                            if (x.id !== q.id || x.type !== 'single') return x
+                            if (x.id !== q.id || !isSingleQuestion(x)) return x
                             return { ...x, options: [...x.options, ''] }
                           }),
                         })
@@ -346,20 +405,25 @@ export default function SurveyEditorPage() {
             )}
           </div>
           <div className={styles.actions_save}>
-          <button type="button" className={styles.outlineBtn} onClick={() => commit(survey, true)}>Сохранить черновик</button>
-          <button type="button" className={styles.primaryBtn} onClick={() => { 
+          <button type="button" className={styles.outlineBtn} onClick={() => commit(survey, true)} disabled={isSaving}>
+            {isSaving ? 'Сохранение...' : 'Сохранить черновик'}
+          </button>
+          <button type="button" className={styles.primaryBtn} onClick={() => {
               const errors = validateSurvey(survey)
               if (errors.length > 0) {
                 setValidationError(errors[0])
                 return
               }
-              
+
               setValidationError('')
               const publishedSurvey = { ...survey, status: 'published' as const }
-              upsertSurvey(publishedSurvey)
-              setPublishedSurveyLink(`${window.location.origin}/survey/${publishedSurvey.id}`)
-              setShowPublishPopup(true)
-            }}>Опубликовать</button>
+              commit(publishedSurvey, true).then(() => {
+                setPublishedSurveyLink(`${window.location.origin}/survey/${publishedSurvey.public_id || publishedSurvey.id}`)
+                setShowPublishPopup(true)
+              })
+            }} disabled={isSaving}>
+            {isSaving ? 'Публикация...' : 'Опубликовать'}
+          </button>
           </div>
         </div>
         {validationError && (
