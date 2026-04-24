@@ -1,6 +1,6 @@
 .page {
   padding: 10px 28px 100px;
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -514,5 +514,229 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (max-width: 1200px) {
+  .page {
+    padding: 10px 20px 100px;
+  }
+}
+
+@media (max-width: 900px) {
+  .page {
+    padding: 10px 16px 80px;
+    max-width: 100%;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .label {
+    font-size: 1.1rem;
+  }
+
+  .question {
+    padding: 14px 16px;
+  }
+
+  .questionInput {
+    font-size: 1rem;
+  }
+
+  .questionTypeSelect {
+    min-width: 120px;
+    padding: 4px 28px 4px 16px;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions_save {
+    justify-content: stretch;
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 8px 12px 60px;
+  }
+
+  .card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .field {
+    margin-bottom: 14px;
+  }
+
+  .label {
+    font-size: 1rem;
+  }
+
+  .input {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+
+  .question {
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+
+  .questionHead {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .questionTitleRow {
+    width: 100%;
+  }
+
+  .questionActions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .questionInput {
+    font-size: 0.95rem;
+  }
+
+  .questionTypeSelect {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .iconButton {
+    width: 28px;
+    height: 28px;
+  }
+
+  .optionRow {
+    gap: 8px;
+  }
+
+  .optionInput {
+    font-size: 0.95rem;
+  }
+
+  .removeOptionBtn,
+  .optionMenuBtn {
+    width: 24px;
+    height: 24px;
+  }
+
+  .addOptionBtn {
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  .primaryBtn,
+  .outlineBtn,
+  .ghostBtn {
+    padding: 10px 20px;
+    font-size: 0.85rem;
+  }
+
+  .ghostBtn {
+    padding: 8px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 6px 10px 50px;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  .label {
+    font-size: 0.95rem;
+  }
+
+  .input {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+    min-height: 36px;
+  }
+
+  .question {
+    padding: 10px 12px;
+    border-radius: 8px;
+  }
+
+  .questionNumber {
+    font-size: 0.9rem;
+  }
+
+  .questionInput {
+    font-size: 0.9rem;
+    padding: 6px 10px;
+  }
+
+  .questionTypeSelect {
+    font-size: 0.85rem;
+    padding: 4px 24px 4px 12px;
+  }
+
+  .iconButton {
+    width: 26px;
+    height: 26px;
+  }
+
+  .radioFake {
+    width: 18px;
+    height: 18px;
+  }
+
+  .optionInput {
+    padding: 6px 10px;
+    font-size: 0.9rem;
+  }
+
+  .removeOptionBtn,
+  .optionMenuBtn {
+    width: 22px;
+    height: 22px;
+  }
+
+  .addOptionBtn {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+
+  .optionsCounter {
+    font-size: 0.75rem;
+  }
+
+  .primaryBtn,
+  .outlineBtn,
+  .ghostBtn {
+    padding: 8px 16px;
+    font-size: 0.8rem;
+  }
+
+  .ghostBtn {
+    padding: 6px 14px;
+  }
+
+  .plusIcon {
+    font-size: 20px;
+  }
+
+  .helperLinks {
+    font-size: 0.85rem;
+  }
+
+  .error {
+    padding: 12px 16px;
+    font-size: 0.85rem;
   }
 }

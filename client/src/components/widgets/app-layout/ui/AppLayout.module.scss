@@ -3,6 +3,7 @@
   flex-direction: column;
   min-height: 100dvh;
   min-height: 100vh;
+  min-width: 320px;
   background: var(--page-bg);
 }
 
@@ -184,5 +185,91 @@
   .sidebarLink {
     width: 44px;
     height: 44px;
+  }
+}
+
+@media (max-width: 768px) {
+  .appTopBar {
+    gap: 12px;
+    padding: 0 12px 0 10px;
+  }
+
+  .appTopBarTitle {
+    font-size: 1.15rem;
+  }
+
+  .appTopBarActions {
+    gap: 8px;
+  }
+
+  .userName {
+    max-width: 80px;
+    font-size: 0.85rem;
+  }
+
+  .loginBtn {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+
+  .logoutBtn {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+
+  .sidebar {
+    width: 56px;
+    padding: 10px 0;
+  }
+
+  .sidebarLink {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .appTopBar {
+    min-height: 56px;
+    padding: 0 10px 0 8px;
+  }
+
+  .appTopBarTitle {
+    font-size: 1rem;
+  }
+
+  .appTopBarBack {
+    width: 32px;
+    height: 32px;
+  }
+
+  .appTopBarAvatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .userName {
+    display: none;
+  }
+
+  .loginBtn {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+
+  .logoutBtn {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+  }
+
+  .sidebar {
+    width: 50px;
+    padding: 8px 0;
+  }
+
+  .sidebarLink {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
   }
 }

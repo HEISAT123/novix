@@ -18,6 +18,95 @@
   box-shadow: var(--shadow-sm);
 }
 
+@media (max-width: 768px) {
+  .page {
+    padding-top: 32px;
+    padding-bottom: 40px;
+  }
+
+  .card {
+    max-width: 400px;
+    padding: 28px 24px;
+  }
+
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .desc {
+    font-size: 0.9rem;
+  }
+
+  .input {
+    padding: 10px 12px;
+    font-size: 0.95rem;
+  }
+
+  .primaryBtn {
+    padding: 10px 24px;
+    font-size: 0.95rem;
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 0 12px 36px;
+    padding-top: 24px;
+  }
+
+  .card {
+    max-width: 100%;
+    padding: 24px 20px;
+    border-radius: 14px;
+  }
+
+  .title {
+    font-size: 1.4rem;
+  }
+
+  .desc {
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+  }
+
+  .error {
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+  }
+
+  .field {
+    margin-bottom: 16px;
+  }
+
+  .label {
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+  }
+
+  .input {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    border-radius: 10px;
+  }
+
+  .fieldError {
+    font-size: 0.8rem;
+  }
+
+  .primaryBtn {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    min-width: 100px;
+    border-radius: 10px;
+  }
+
+  .footer {
+    font-size: 0.85rem;
+  }
+}
+
 .title {
   margin: 0 0 8px;
   font-size: 1.75rem;
