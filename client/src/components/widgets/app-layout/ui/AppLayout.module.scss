@@ -229,18 +229,25 @@
 }
 
 @media (max-width: 480px) {
+  .appShellRow {
+    flex-direction: column;
+  }
+
   .appTopBar {
     min-height: 56px;
-    padding: 0 10px 0 8px;
+    padding: 0 12px 0 12px;
+    border-bottom: none;
   }
 
   .appTopBarTitle {
-    font-size: 1rem;
+    font-size: 1.1rem;
+    font-weight: 500;
   }
 
   .appTopBarBack {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
+    margin-left: 0;
   }
 
   .appTopBarAvatar {
@@ -249,27 +256,46 @@
   }
 
   .userName {
-    display: none;
-  }
-
-  .loginBtn {
-    padding: 6px 10px;
-    font-size: 0.8rem;
-  }
-
-  .logoutBtn {
-    padding: 4px 8px;
+    max-width: 60px;
     font-size: 0.75rem;
   }
 
+  .loginBtn {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    border-radius: 8px;
+  }
+
+  .logoutBtn {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    border-radius: 8px;
+  }
+
   .sidebar {
-    width: 50px;
-    padding: 8px 0;
+    width: 100%;
+    height: 60px;
+    flex-direction: row;
+    justify-content: center;
+    border-right: none;
+    border-top: 1px solid var(--line);
+    padding: 0;
+    order: 2;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--surface);
+    z-index: 100;
   }
 
   .sidebarLink {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+  }
+
+  .appMain {
+    padding-bottom: 70px;
   }
 }

@@ -650,93 +650,146 @@
 
 @media (max-width: 480px) {
   .page {
-    padding: 6px 10px 50px;
+    padding: 12px 12px 80px;
   }
 
   .card {
-    padding: 14px;
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .field {
+    margin-bottom: 16px;
   }
 
   .label {
-    font-size: 0.95rem;
+    font-size: 1rem;
+    font-weight: 500;
   }
 
   .input {
-    padding: 8px 10px;
-    font-size: 0.85rem;
-    min-height: 36px;
+    padding: 12px 14px;
+    font-size: 0.95rem;
+    min-height: 44px;
+    border-radius: 10px;
   }
 
   .question {
-    padding: 10px 12px;
-    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+  }
+
+  .question:active {
+    transform: scale(0.99);
+    transition: transform 0.1s ease;
+  }
+
+  .questionHead {
+    margin-bottom: 12px;
   }
 
   .questionNumber {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    font-weight: 500;
   }
 
   .questionInput {
-    font-size: 0.9rem;
-    padding: 6px 10px;
+    font-size: 0.95rem;
+    padding: 8px 12px;
+    border-radius: 8px;
   }
 
   .questionTypeSelect {
-    font-size: 0.85rem;
-    padding: 4px 24px 4px 12px;
+    font-size: 0.9rem;
+    padding: 8px 28px 8px 14px;
+    border-radius: 8px;
+    min-height: 40px;
   }
 
   .iconButton {
-    width: 26px;
-    height: 26px;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+  }
+
+  .iconButton:active {
+    transform: scale(0.95);
   }
 
   .radioFake {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
   }
 
   .optionInput {
-    padding: 6px 10px;
-    font-size: 0.9rem;
+    padding: 8px 12px;
+    font-size: 0.95rem;
+    border-radius: 8px;
   }
 
   .removeOptionBtn,
   .optionMenuBtn {
-    width: 22px;
-    height: 22px;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+  }
+
+  .removeOptionBtn:active,
+  .optionMenuBtn:active {
+    transform: scale(0.95);
   }
 
   .addOptionBtn {
-    padding: 8px 12px;
-    font-size: 0.85rem;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    min-height: 40px;
+  }
+
+  .addOptionBtn:active {
+    transform: scale(0.98);
   }
 
   .optionsCounter {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  .actions {
+    margin-top: 24px;
+    gap: 12px;
   }
 
   .primaryBtn,
   .outlineBtn,
   .ghostBtn {
-    padding: 8px 16px;
-    font-size: 0.8rem;
+    padding: 12px 20px;
+    font-size: 0.95rem;
+    border-radius: 10px;
+    min-height: 44px;
+  }
+
+  .primaryBtn:active,
+  .outlineBtn:active,
+  .ghostBtn:active {
+    transform: scale(0.98);
   }
 
   .ghostBtn {
-    padding: 6px 14px;
+    padding: 10px 18px;
   }
 
   .plusIcon {
-    font-size: 20px;
+    font-size: 24px;
   }
 
   .helperLinks {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
   }
 
   .error {
-    padding: 12px 16px;
-    font-size: 0.85rem;
+    padding: 14px 16px;
+    font-size: 0.9rem;
+    border-radius: 10px;
   }
 }
