@@ -1,4 +1,4 @@
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../../context/useAuth'
 import mainIcon from '../../../../assets/mainIcon.svg'
 import profileIcon from '../../../../assets/profileIcon.png'
@@ -13,6 +13,7 @@ function getHeaderMeta(pathname: string): { title: string; showBack: boolean } {
 
 export function AppLayout() {
   const { pathname } = useLocation()
+  const navigate = useNavigate()
   const { user, logout, isLoading } = useAuth()
   const { title, showBack } = getHeaderMeta(pathname)
 
@@ -29,6 +30,7 @@ export function AppLayout() {
               <span style={{ fontSize: '30px', paddingBottom:'5px' }}>←</span>
             </Link>
           )}
+          {pathname === '/' && <img src={mainIcon} width={32} height={32} className={styles.appLogo} alt="" aria-hidden />}
           <h1 className={styles.appTopBarTitle}>{title}</h1>
         </div>
         <div className={styles.appTopBarActions}>
@@ -46,7 +48,10 @@ export function AppLayout() {
               <button
                 type="button"
                 className={styles.logoutBtn}
-                onClick={logout}
+                onClick={() => {
+                  logout()
+                  navigate('/')
+                }}
                 aria-label="Выйти"
               >
                 Выйти
@@ -60,23 +65,9 @@ export function AppLayout() {
         </div>
       </header>
 
-      <div className={styles.appShellRow}>
-        <aside className={styles.sidebar} aria-label="Навигация">
-          <NavLink
-            to="/"
-            end
-            className={({ isActive }) =>
-              `${styles.sidebarLink} ${isActive ? styles.sidebarLinkActive : ''}`.trim()
-            }
-            title="Мои опросы"
-          >
-            <img src={mainIcon} width={30} height={30} alt="" aria-hidden />
-          </NavLink>
-        </aside>
-        <div className={styles.appMain}>
-          <div className={styles.appMainBody}>
-            <Outlet />
-          </div>
+      <div className={styles.appMain}>
+        <div className={styles.appMainBody}>
+          <Outlet />
         </div>
       </div>
     </div>

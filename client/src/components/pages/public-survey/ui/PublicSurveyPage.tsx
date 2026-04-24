@@ -90,7 +90,7 @@ export default function PublicSurveyPage() {
                 <input
                   type="radio"
                   name={q.id}
-                  value={opt}
+                  value={j.toString()}
                   checked={answers[q.id] === opt}
                   onChange={() => {
                     setAnswer(q.id, opt)
