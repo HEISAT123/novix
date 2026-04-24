@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import React from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useAuth } from '../../../../context/useAuth'
 import { useSurveyContext } from '../../../../hooks/useSurveyContext'
 import { createEmptyQuestion, createEmptySurvey } from '../../../../hooks/useSurveys'
 import type { Question, Survey } from '../../../../types/survey'
@@ -64,6 +65,7 @@ const validateSurvey = (survey: Survey): string[] => {
 export default function SurveyEditorPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const { user } = useAuth()
   const { surveys, upsertSurvey } = useSurveyContext()
   const [addMenuOpen, setAddMenuOpen] = useState(false)
   const [openQuestionTypeMenu, setOpenQuestionTypeMenu] = useState<string | null>(null)
@@ -79,7 +81,7 @@ export default function SurveyEditorPage() {
     return found ? normalizeSurvey(found) : null
   }, [id, surveys])
 
-  const newSurvey = useMemo(() => createEmptySurvey(), [])
+  const newSurvey = useMemo(() => createEmptySurvey(user?.id ?? null), [user?.id])
   const loadedSurvey: Survey | null = id === 'new' ? newSurvey : fromStore
   const [survey, setSurvey] = useState<Survey | null>(() => loadedSurvey)
 

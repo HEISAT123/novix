@@ -21,6 +21,7 @@ export type Survey = {
   description: string
   status: SurveyStatus
   questions: Question[]
+  userId: string | null
 }
 
 export type SurveyResponseRow = {

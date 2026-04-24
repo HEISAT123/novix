@@ -34,19 +34,25 @@ export function createEmptyQuestion(type: 'single' | 'text'): Question {
   return { id, type: 'text', text: '' }
 }
 
-export function createEmptySurvey(): Survey {
+export function createEmptySurvey(userId: string | null = null): Survey {
   return {
     id: crypto.randomUUID(),
     title: '',
     description: '',
     status: 'draft',
     questions: [],
+    userId,
   }
 }
 
-export function useSurveys(): UseSurveysApi {
-  const [surveys, setSurveys] = useState<Survey[]>(() => loadSurveys())
+export function useSurveys(currentUserId: string | null): UseSurveysApi {
+  const [allSurveys, setAllSurveys] = useState<Survey[]>(() => loadSurveys())
   const [responsesTick, setResponsesTick] = useState(0)
+
+  const surveys = useMemo(() => {
+    if (!currentUserId) return []
+    return allSurveys.filter((s) => s.userId === currentUserId)
+  }, [allSurveys, currentUserId])
 
   useEffect(() => {
     const onChange = () => setResponsesTick((x) => x + 1)
@@ -54,12 +60,16 @@ export function useSurveys(): UseSurveysApi {
     return () => window.removeEventListener('oprosi-responses-changed', onChange)
   }, [])
 
+  useEffect(() => {
+    setAllSurveys(loadSurveys())
+  }, [currentUserId])
+
   const refresh = useCallback(() => {
-    setSurveys(loadSurveys())
+    setAllSurveys(loadSurveys())
   }, [])
 
   const upsertSurvey = useCallback((survey: Survey) => {
-    setSurveys((prev) => {
+    setAllSurveys((prev) => {
       const i = prev.findIndex((s) => s.id === survey.id)
       const next =
         i === -1 ? [...prev, survey] : prev.map((s) => (s.id === survey.id ? survey : s))
@@ -69,7 +79,7 @@ export function useSurveys(): UseSurveysApi {
   }, [])
 
   const deleteSurvey = useCallback((id: string) => {
-    setSurveys((prev) => {
+    setAllSurveys((prev) => {
       const next = prev.filter((s) => s.id !== id)
       persistSurveys(next)
       return next
