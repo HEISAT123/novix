@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import activeSurveysIcon from '../../../../assets/activeSurveys.svg'
 import totalResponsesIcon from '../../../../assets/totalResponses.svg'
+import { useAuth } from '../../../../context/useAuth'
 import { useSurveyContext } from '../../../../hooks/useSurveyContext'
 import { getResponsesForSurvey } from '../../../../lib/surveysStorage'
 import styles from './MySurveysPage.module.scss'
@@ -20,9 +22,19 @@ function StatCard({ icon, label }: { icon: ReactNode; label: string }) {
 export default function MySurveysPage() {
   const navigate = useNavigate()
   const { surveys, stats, deleteSurvey } = useSurveyContext()
+  const { user } = useAuth()
+  const [showAuthMessage, setShowAuthMessage] = useState(false)
 
   const handleDelete = (id: string) => {
     deleteSurvey(id)
+  }
+
+  const handleCreateSurveyClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!user) {
+      e.preventDefault()
+      setShowAuthMessage(true)
+      setTimeout(() => setShowAuthMessage(false), 3000)
+    }
   }
 
   return (
@@ -104,9 +116,12 @@ export default function MySurveysPage() {
       </section>
 
       <div className={styles.pageFooterCta}>
-        <Link to="/edit/new" className={styles.primaryBtn}>
+        <Link to="/edit/new" className={styles.primaryBtn} onClick={handleCreateSurveyClick}>
           Создать опрос
         </Link>
+        {showAuthMessage && !user && (
+          <p className={styles.authMessage}>Если хотите создать опрос, зарегистрируйтесь</p>
+        )}
       </div>
     </div>
   )
