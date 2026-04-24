@@ -101,20 +101,6 @@ export default function MySurveysPage() {
               <div className={styles.surveyCardHead}>
                 <h2 className={styles.surveyCardTitle}>{s.title || 'Без названия'}</h2>
                 <div className={styles.surveyCardActions}>
-                  {s.status === 'published' && (
-                    <button
-                      type="button"
-                      className={styles.shareBtn}
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handleCopyLink(s.id)
-                      }}
-                      aria-label="Скопировать ссылку"
-                      title="Скопировать ссылку"
-                    >
-                      {copiedId === s.id ? '✓' : '🔗'}
-                    </button>
-                  )}
                   <button
                     type="button"
                     className={styles.deleteBtn}
