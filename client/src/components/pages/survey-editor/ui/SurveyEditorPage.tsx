@@ -64,7 +64,7 @@ const validateSurvey = (survey: Survey): string[] => {
 
 export default function SurveyEditorPage() {
   const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
+  useNavigate();
   const { user } = useAuth()
   const { surveys, upsertSurvey } = useSurveyContext()
   const [addMenuOpen, setAddMenuOpen] = useState(false)
@@ -119,19 +119,18 @@ export default function SurveyEditorPage() {
     setOpenQuestionTypeMenu(null)
   }
 
-  const commit = useCallback((next: Survey, replaceId: boolean) => {
+  const commit = useCallback((next: Survey) => {
     const errors = validateSurvey(next)
     if (errors.length > 0) {
       setValidationError(errors[0])
       return
     }
-    
+
     setValidationError('')
     const normalized = normalizeSurvey(next)
     upsertSurvey(normalized)
-    if (replaceId && id === 'new') navigate(`/edit/${normalized.id}`, { replace: true })
     setShowSavePopup(true)
-  }, [id, navigate, upsertSurvey])
+  }, [upsertSurvey])
 
   if (id !== 'new' && !loadedSurvey) return <div className={styles.page}><Link to="/">Опрос не найден</Link></div>
   if (!survey) return <div className={styles.page}>Загрузка…</div>
@@ -348,7 +347,7 @@ export default function SurveyEditorPage() {
             )}
           </div>
           <div className={styles.actions_save}>
-          <button type="button" className={styles.outlineBtn} onClick={() => commit(survey, true)}>Сохранить черновик</button>
+          <button type="button" className={styles.outlineBtn} onClick={() => commit(survey)}>Сохранить черновик</button>
           <button type="button" className={styles.primaryBtn} onClick={() => { 
               const errors = validateSurvey(survey)
               if (errors.length > 0) {
