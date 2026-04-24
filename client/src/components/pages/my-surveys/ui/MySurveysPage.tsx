@@ -24,9 +24,21 @@ export default function MySurveysPage() {
   const { surveys, stats, deleteSurvey } = useSurveyContext()
   const { user } = useAuth()
   const [showAuthMessage, setShowAuthMessage] = useState(false)
+  const [copiedId, setCopiedId] = useState<string | null>(null)
 
   const handleDelete = (id: string) => {
     deleteSurvey(id)
+  }
+
+  const handleCopyLink = async (id: string) => {
+    try {
+      const link = `${window.location.origin}/survey/${id}`
+      await navigator.clipboard.writeText(link)
+      setCopiedId(id)
+      setTimeout(() => setCopiedId(null), 2000)
+    } catch (err) {
+      console.error('Failed to copy link:', err)
+    }
   }
 
   const handleCreateSurveyClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -88,18 +100,34 @@ export default function MySurveysPage() {
             >
               <div className={styles.surveyCardHead}>
                 <h2 className={styles.surveyCardTitle}>{s.title || 'Без названия'}</h2>
-                <button
-                  type="button"
-                  className={styles.deleteBtn}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleDelete(s.id)
-                  }}
-                  aria-label="Удалить опрос"
-                  title="Удалить опрос"
-                >
-                  ×
-                </button>
+                <div className={styles.surveyCardActions}>
+                  {s.status === 'published' && (
+                    <button
+                      type="button"
+                      className={styles.shareBtn}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleCopyLink(s.id)
+                      }}
+                      aria-label="Скопировать ссылку"
+                      title="Скопировать ссылку"
+                    >
+                      {copiedId === s.id ? '✓' : '🔗'}
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    className={styles.deleteBtn}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleDelete(s.id)
+                    }}
+                    aria-label="Удалить опрос"
+                    title="Удалить опрос"
+                  >
+                    ×
+                  </button>
+                </div>
               </div>
               <span className={s.status === 'published' ? styles.badgeOk : styles.badgeMuted}>
                 {s.status === 'published' ? 'Опубликован' : 'Черновик'}

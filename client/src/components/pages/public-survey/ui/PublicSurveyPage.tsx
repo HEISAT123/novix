@@ -1,6 +1,6 @@
-import { type FormEvent, useMemo, useState } from 'react'
+import { type FormEvent, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { useSurveyContext } from '../../../../hooks/useSurveyContext'
+import { loadSurveys } from '../../../../lib/surveysStorage'
 import { appendResponse } from '../../../../lib/surveysStorage'
 import { validateAnswer, validateSurveyForm, type ValidationError } from '../../../../lib/validation'
 import type { AnswersMap } from '../../../../types/survey'
@@ -9,8 +9,8 @@ import styles from './PublicSurveyPage.module.scss'
 export default function PublicSurveyPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { surveys } = useSurveyContext()
-  const survey = useMemo(() => surveys.find((s) => s.id === id), [surveys, id])
+  const allSurveys = loadSurveys()
+  const survey = allSurveys.find((s) => s.id === id)
   const [answers, setAnswers] = useState<AnswersMap>({})
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isLoading, setIsLoading] = useState(false)
@@ -48,7 +48,19 @@ export default function PublicSurveyPage() {
 
     setErrors({})
 
-    const validation = validateSurveyForm(answers, survey.questions)
+    // Convert indices to actual option values
+    const finalAnswers: AnswersMap = {}
+    for (const [qid, value] of Object.entries(answers)) {
+      const question = survey.questions.find((q) => q.id === qid)
+      if (question?.type === 'single') {
+        const index = parseInt(value, 10)
+        finalAnswers[qid] = question.options[index] || value
+      } else {
+        finalAnswers[qid] = value
+      }
+    }
+
+    const validation = validateSurveyForm(finalAnswers, survey.questions)
 
     if (!validation.isValid) {
       const errorsMap: Record<string, string> = {}
@@ -62,7 +74,7 @@ export default function PublicSurveyPage() {
     setIsLoading(true)
 
     try {
-      appendResponse(survey.id, answers)
+      appendResponse(survey.id, finalAnswers)
       navigate(`/survey/${survey.id}/thanks`, { replace: true })
     } catch (err) {
       setErrors({ form: err instanceof Error ? err.message : 'Ошибка при отправке ответов' })
@@ -91,9 +103,9 @@ export default function PublicSurveyPage() {
                   type="radio"
                   name={q.id}
                   value={j.toString()}
-                  checked={answers[q.id] === opt}
+                  checked={answers[q.id] === j.toString()}
                   onChange={() => {
-                    setAnswer(q.id, opt)
+                    setAnswer(q.id, j.toString())
                     clearFieldError(q.id)
                   }}
                 />
