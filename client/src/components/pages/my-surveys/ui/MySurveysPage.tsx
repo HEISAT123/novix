@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import activeSurveysIcon from '../../../../assets/activeSurveys.svg'
 import totalResponsesIcon from '../../../../assets/totalResponses.svg'
+import { useAuth } from '../../../../context/useAuth'
 import { useSurveyContext } from '../../../../hooks/useSurveyContext'
 import { getResponsesForSurvey } from '../../../../lib/surveysStorage'
 import styles from './MySurveysPage.module.scss'
@@ -20,9 +22,37 @@ function StatCard({ icon, label }: { icon: ReactNode; label: string }) {
 export default function MySurveysPage() {
   const navigate = useNavigate()
   const { surveys, stats, deleteSurvey } = useSurveyContext()
+  const { user } = useAuth()
+  const [showAuthMessage, setShowAuthMessage] = useState(false)
+  const [copiedId, setCopiedId] = useState<string | null>(null)
 
   const handleDelete = (id: string) => {
     deleteSurvey(id)
+  }
+
+  const handleCopyLink = async (publicId: string | null) => {
+    console.log('handleCopyLink called with publicId:', publicId)
+    if (!publicId) {
+      console.error('publicId is null or undefined')
+      return
+    }
+    try {
+      const link = `${window.location.origin}/survey/${publicId}`
+      console.log('Copying link:', link)
+      await navigator.clipboard.writeText(link)
+      setCopiedId(publicId)
+      setTimeout(() => setCopiedId(null), 2000)
+    } catch (err) {
+      console.error('Failed to copy link:', err)
+    }
+  }
+
+  const handleCreateSurveyClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!user) {
+      e.preventDefault()
+      setShowAuthMessage(true)
+      setTimeout(() => setShowAuthMessage(false), 3000)
+    }
   }
 
   return (
@@ -76,18 +106,35 @@ export default function MySurveysPage() {
             >
               <div className={styles.surveyCardHead}>
                 <h2 className={styles.surveyCardTitle}>{s.title || 'Без названия'}</h2>
-                <button
-                  type="button"
-                  className={styles.deleteBtn}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleDelete(s.id)
-                  }}
-                  aria-label="Удалить опрос"
-                  title="Удалить опрос"
-                >
-                  ×
-                </button>
+                <div className={styles.surveyCardActions}>
+                  {s.status === 'published' && s.public_id && (
+                    <button
+                      type="button"
+                      className={styles.shareBtn}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        console.log('Button clicked, public_id:', s.public_id)
+                        handleCopyLink(s.public_id)
+                      }}
+                      aria-label="Скопировать ссылку"
+                      title="Скопировать ссылку"
+                    >
+                      {copiedId === s.public_id ? '✓' : '🔗'}
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    className={styles.deleteBtn}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleDelete(s.id)
+                    }}
+                    aria-label="Удалить опрос"
+                    title="Удалить опрос"
+                  >
+                    ×
+                  </button>
+                </div>
               </div>
               <span className={s.status === 'published' ? styles.badgeOk : styles.badgeMuted}>
                 {s.status === 'published' ? 'Опубликован' : 'Черновик'}
@@ -104,9 +151,12 @@ export default function MySurveysPage() {
       </section>
 
       <div className={styles.pageFooterCta}>
-        <Link to="/edit/new" className={styles.primaryBtn}>
+        <Link to="/edit/new" className={styles.primaryBtn} onClick={handleCreateSurveyClick}>
           Создать опрос
         </Link>
+        {showAuthMessage && !user && (
+          <p className={styles.authMessage}>Если хотите создать опрос, зарегистрируйтесь</p>
+        )}
       </div>
     </div>
   )

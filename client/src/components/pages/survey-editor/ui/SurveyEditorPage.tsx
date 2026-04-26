@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useSurveyContext } from '../../../../hooks/useSurveyContext'
 import { createEmptyQuestion, createEmptySurvey } from '../../../../hooks/useSurveys'
 import type { Question, Survey } from '../../../../types/survey'
+import { validateSurveyTitle, validateSurveyDescription, validateQuestionText, validateOptionText } from '../../../../lib/validation'
 import styles from './SurveyEditorPage.module.scss'
 import PublishSurveyPopup from '../../../popup/publish-survey-popup/PublishSurveyPopup'
 import SaveSurveyPopup from '../../../popup/save-survey-popup/SaveSurveyPopup'
@@ -40,14 +41,15 @@ const validateSurvey = (survey: Survey): string[] => {
     errors.push('Добавьте хотя бы один вопрос')
   }
 
-  if (!survey.title.trim()) {
-    errors.push('Название опроса не может быть пустым')
-  }
-  
+  const titleError = validateSurveyTitle(survey.title)
+  if (titleError) errors.push(titleError.message)
+
+  const descriptionError = validateSurveyDescription(survey.description)
+  if (descriptionError) errors.push(descriptionError.message)
+
   survey.questions.forEach((question, index) => {
-    if (!question.text.trim()) {
-      errors.push(`Вопрос ${index + 1} не может быть пустым`)
-    }
+    const questionError = validateQuestionText(question.text)
+    if (questionError) errors.push(questionError.message)
 
     if (isSingleQuestion(question)) {
       const nonEmptyOptions = question.options.filter(opt => opt.trim())
@@ -55,20 +57,19 @@ const validateSurvey = (survey: Survey): string[] => {
         errors.push(`Вопрос ${index + 1} должен иметь хотя бы 2 непустых варианта ответа`)
       }
       question.options.forEach((opt, optIndex) => {
-        if (opt.length > 100) {
-          errors.push(`Вариант ${optIndex + 1} вопроса ${index + 1} не может превышать 100 символов`)
-        }
+        const optionError = validateOptionText(opt)
+        if (optionError) errors.push(optionError.message)
       })
     }
   })
-  
+
   return errors
 }
 
 export default function SurveyEditorPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { upsertSurvey, getSurveyById, addQuestion, updateQuestion, deleteQuestion } = useSurveyContext()
+  const { upsertSurvey, getSurveyById, addQuestion, deleteQuestion, publishSurvey } = useSurveyContext()
   const [addMenuOpen, setAddMenuOpen] = useState(false)
   const [openQuestionTypeMenu, setOpenQuestionTypeMenu] = useState<string | null>(null)
   const descriptionRef = React.useRef<HTMLTextAreaElement>(null)
@@ -79,6 +80,7 @@ export default function SurveyEditorPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [survey, setSurvey] = useState<Survey | null>(null)
+  const [savedSurveyId, setSavedSurveyId] = useState<string | null>(null)
 
   useEffect(() => {
     const loadSurvey = async () => {
@@ -136,7 +138,7 @@ export default function SurveyEditorPage() {
     setOpenQuestionTypeMenu(null)
   }
 
-  const commit = useCallback(async (next: Survey, replaceId: boolean) => {
+  const commit = useCallback(async (next: Survey, replaceId: boolean, shouldPublish: boolean = false) => {
     const errors = validateSurvey(next)
     if (errors.length > 0) {
       setValidationError(errors[0])
@@ -148,47 +150,61 @@ export default function SurveyEditorPage() {
 
     try {
       const normalized = normalizeSurvey(next)
+      
+      // Создаём или обновляем опрос
       const surveyId = await upsertSurvey(normalized)
+      setSavedSurveyId(surveyId)
 
-      if (replaceId && id === 'new') {
-        navigate(`/edit/${surveyId}`, { replace: true })
-      }
-
-      // Синхронизация вопросов с API
-      const existingQuestions = survey?.questions || []
-      const newQuestions = normalized.questions
-
-      // Удаление вопросов, которых нет в новой версии
-      for (const existingQ of existingQuestions) {
-        if (!newQuestions.find(nq => nq.id === existingQ.id)) {
-          await deleteQuestion(surveyId, existingQ.id)
+      // Получаем текущие вопросы
+      let currentQuestions: Question[] = []
+      try {
+        const freshSurvey = await getSurveyById(surveyId)
+        if (freshSurvey) {
+          currentQuestions = freshSurvey.questions
         }
-      }
+      } catch (e) {}
 
-      // Добавление или обновление вопросов
-      for (const question of newQuestions) {
-        const existingQ = existingQuestions.find(eq => eq.id === question.id)
-        if (!existingQ) {
+      // Добавляем новые вопросы
+      for (const question of normalized.questions) {
+        const exists = currentQuestions.some(eq => eq.id === question.id)
+        if (!exists) {
           await addQuestion(surveyId, question)
-        } else if (JSON.stringify(existingQ) !== JSON.stringify(question)) {
-          await updateQuestion(surveyId, question.id, question)
         }
       }
 
-      // Перезагрузка опроса с обновлёнными вопросами
-      const updatedSurvey = await getSurveyById(surveyId)
-      if (updatedSurvey) {
-        setSurvey(normalizeSurvey(updatedSurvey))
+      // Удаляем вопросы, которых больше нет
+      for (const existingQuestion of currentQuestions) {
+        const stillExists = normalized.questions.some(nq => nq.id === existingQuestion.id)
+        if (!stillExists) {
+          await deleteQuestion(surveyId, existingQuestion.id)
+        }
       }
 
-      setShowSavePopup(true)
+      // Публикуем, если нужно
+      if (shouldPublish) {
+        const link = await publishSurvey(surveyId)
+        
+        setPublishedSurveyLink(link)
+        setShowPublishPopup(true)
+      } else {
+        setShowSavePopup(true)
+      }
+
+      // Переходим на новую страницу ПОСЛЕ закрытия popup
+      if (replaceId && id === 'new' && !shouldPublish) {
+        // Перенаправление будет выполнено после закрытия popup
+      }
+
     } catch (error) {
-      setValidationError('Ошибка при сохранении. Попробуйте снова.')
+      // Не показываем ошибку, если это повторное сохранение уже существующего опроса
+      if (!survey.public_id) {
+        setValidationError('Ошибка при сохранении. Попробуйте снова.')
+      }
       console.error('Save error:', error)
     } finally {
       setIsSaving(false)
     }
-  }, [id, navigate, upsertSurvey, survey, addQuestion, updateQuestion, deleteQuestion, getSurveyById])
+  }, [id, navigate, upsertSurvey, getSurveyById, addQuestion, deleteQuestion, publishSurvey])
 
   if (!survey && !isLoading) return <div className={styles.page}><Link to="/">Опрос не найден</Link></div>
   if (!survey) return <div className={styles.page}>Загрузка…</div>
@@ -405,10 +421,10 @@ export default function SurveyEditorPage() {
             )}
           </div>
           <div className={styles.actions_save}>
-          <button type="button" className={styles.outlineBtn} onClick={() => commit(survey, true)} disabled={isSaving}>
-            {isSaving ? 'Сохранение...' : 'Сохранить черновик'}
-          </button>
-          <button type="button" className={styles.primaryBtn} onClick={() => {
+            <button type="button" className={styles.outlineBtn} onClick={() => commit(survey, true)} disabled={isSaving}>
+              {isSaving ? 'Сохранение...' : 'Сохранить черновик'}
+            </button>
+            <button type="button" className={styles.primaryBtn} onClick={() => {
               const errors = validateSurvey(survey)
               if (errors.length > 0) {
                 setValidationError(errors[0])
@@ -416,14 +432,10 @@ export default function SurveyEditorPage() {
               }
 
               setValidationError('')
-              const publishedSurvey = { ...survey, status: 'published' as const }
-              commit(publishedSurvey, true).then(() => {
-                setPublishedSurveyLink(`${window.location.origin}/survey/${publishedSurvey.public_id || publishedSurvey.id}`)
-                setShowPublishPopup(true)
-              })
+              commit(survey, true, true)
             }} disabled={isSaving}>
-            {isSaving ? 'Публикация...' : 'Опубликовать'}
-          </button>
+              {isSaving ? 'Публикация...' : 'Опубликовать'}
+            </button>
           </div>
         </div>
         {validationError && (
@@ -433,21 +445,30 @@ export default function SurveyEditorPage() {
         )}
         {survey.status === 'published' && (
           <p className={styles.helperLinks}>
-            <Link to={`/survey/${survey.id}`}>Открыть опрос</Link> · <Link to={`/results/${survey.id}`}>Результаты</Link>
+            <Link to={`/survey/${survey.public_id}`}>Открыть опрос</Link> · <Link to={`/results/${survey.id}`}>Результаты</Link>
           </p>
         )}
       </div>
+      
+      {/* НАСТОЯЩИЙ ПОПАП */}
       {showPublishPopup && (
         <PublishSurveyPopup
           surveyLink={publishedSurveyLink}
           onClose={() => setShowPublishPopup(false)}
         />
       )}
+      
       {showSavePopup && (
         <SaveSurveyPopup
-          onClose={() => setShowSavePopup(false)}
+          onClose={() => {
+            setShowSavePopup(false)
+            if (id === 'new' && savedSurveyId) {
+              navigate(`/edit/${savedSurveyId}`, { replace: true })
+            }
+          }}
         />
       )}
     </div>
   )
 }
+

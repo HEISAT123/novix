@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { getPublicSurvey, submitPublicResponse } from '../../../../api/surveysApi'
 import { convertApiSurveyToSurvey } from '../../../../api/surveysApi'
 import { validateAnswer, validateSurveyForm, type ValidationError } from '../../../../lib/validation'
+import { appendResponse } from '../../../../lib/surveysStorage'
 import type { AnswersMap, Survey } from '../../../../types/survey'
 import styles from './PublicSurveyPage.module.scss'
 
@@ -80,10 +81,20 @@ export default function PublicSurveyPage() {
     setIsLoading(true)
 
     try {
-      await submitPublicResponse(survey.public_id || survey.id, { answers })
-      navigate(`/survey/${survey.id}/thanks`, { replace: true })
+      await submitPublicResponse(survey.public_id, { answers })
+      // Сохраняем ответ в localStorage для статистики
+      appendResponse(survey.id, answers)
+      navigate(`/survey/${survey.public_id}/thanks`, { replace: true })
     } catch (err) {
-      setErrors({ form: err instanceof Error ? err.message : 'Ошибка при отправке ответов' })
+      let errorMessage = 'Ошибка при отправке ответов'
+      if (err instanceof Error) {
+        errorMessage = err.message
+      } else if (typeof err === 'object' && err !== null && 'message' in err) {
+        errorMessage = String(err.message)
+      } else if (typeof err === 'string') {
+        errorMessage = err
+      }
+      setErrors({ form: errorMessage })
     } finally {
       setIsLoading(false)
     }

@@ -45,7 +45,15 @@ export default function LoginPage() {
       await login(email, password)
       navigate('/', { replace: true })
     } catch (err) {
-      setErrors({ form: err instanceof Error ? err.message : 'Ошибка при входе' })
+      let errorMessage = 'Ошибка при входе'
+      if (err instanceof Error) {
+        errorMessage = err.message
+      } else if (typeof err === 'object' && err !== null && 'message' in err) {
+        errorMessage = String(err.message)
+      } else if (typeof err === 'string') {
+        errorMessage = err
+      }
+      setErrors({ form: errorMessage })
     } finally {
       setIsLoading(false)
     }

@@ -1,6 +1,6 @@
 .page {
   padding: 10px 28px 100px;
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -18,7 +18,7 @@
 }
 
 .label {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   color: var(--black);
 }
 
@@ -37,12 +37,12 @@
   max-height: 280px;
   overflow: hidden;
   font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
-  font-size: 0.95rem;
+  font-size: 1rem;
 
 }
 
 .input::placeholder {
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: var(--placeholder);
   font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif ;
 }
@@ -93,7 +93,7 @@
   padding: 8px 12px;
   border: 1px solid var(--accent-rgba);
   background: transparent;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   color: var(--dark-text);
   font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
   min-width: 0;
@@ -152,7 +152,7 @@
   color: var(--muted);
   font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 400;
   transition: all 0.2s ease;
   min-width: 140px;
@@ -232,12 +232,12 @@
   background: transparent;
   color: var(--placeholder);
   font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
-  font-size: 0.95rem;
+  font-size: 1rem;
 }
 
 .sectionTitle {
   margin: 0 0 16px;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 500;
   color: var(--dark-text);
 }
@@ -269,7 +269,7 @@
   padding: 8px 12px;
   border: 1px solid var(--accent-rgba);
   background: transparent;
-  font-size: 1rem;
+  font-size: 1.05rem;
   color: var(--dark-text);
   font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
   border-radius: 6px;
@@ -347,7 +347,7 @@
   justify-content: center;
   gap: 8px;
   white-space: nowrap;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
 }
 
@@ -362,7 +362,7 @@
 
 .optionsCounter {
   margin: 6px 0 0;
-  font-size: 0.82rem;
+  font-size: 0.87rem;
   color: var(--muted);
 }
 
@@ -437,7 +437,7 @@
 .outlineBtn,
 .ghostBtn {
   font-weight: 400;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   padding: 8px 30px;
   border-radius: 4px;
   transition: all 0.3s ease;
@@ -481,7 +481,7 @@
 .helperLinks {
   margin: 14px 0 0;
   color: var(--muted);
-  font-size: 0.92rem;
+  font-size: 0.97rem;
 }
 
 .helperLinks a {
@@ -500,7 +500,7 @@
   padding: 16px 20px;
   margin-top: 20px;
   color: var(--error);
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 400;
   box-shadow: var(--shadow-error);
   animation: errorSlideIn 0.3s ease;
@@ -514,5 +514,282 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (max-width: 1200px) {
+  .page {
+    padding: 10px 20px 100px;
+  }
+}
+
+@media (max-width: 900px) {
+  .page {
+    padding: 10px 16px 80px;
+    max-width: 100%;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .label {
+    font-size: 1.1rem;
+  }
+
+  .question {
+    padding: 14px 16px;
+  }
+
+  .questionInput {
+    font-size: 1rem;
+  }
+
+  .questionTypeSelect {
+    min-width: 120px;
+    padding: 4px 28px 4px 16px;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions_save {
+    justify-content: stretch;
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 8px 12px 60px;
+  }
+
+  .card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .field {
+    margin-bottom: 14px;
+  }
+
+  .label {
+    font-size: 1rem;
+  }
+
+  .input {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+
+  .question {
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+
+  .questionHead {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .questionTitleRow {
+    width: 100%;
+  }
+
+  .questionActions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .questionInput {
+    font-size: 0.95rem;
+  }
+
+  .questionTypeSelect {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .iconButton {
+    width: 28px;
+    height: 28px;
+  }
+
+  .optionRow {
+    gap: 8px;
+  }
+
+  .optionInput {
+    font-size: 0.95rem;
+  }
+
+  .removeOptionBtn,
+  .optionMenuBtn {
+    width: 24px;
+    height: 24px;
+  }
+
+  .addOptionBtn {
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  .primaryBtn,
+  .outlineBtn,
+  .ghostBtn {
+    padding: 10px 20px;
+    font-size: 0.85rem;
+  }
+
+  .ghostBtn {
+    padding: 8px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 12px 12px 40px;
+  }
+
+  .card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .field {
+    margin-bottom: 16px;
+  }
+
+  .label {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .input {
+    padding: 12px 14px;
+    font-size: 0.95rem;
+    min-height: 44px;
+    border-radius: 10px;
+  }
+
+  .question {
+    padding: 14px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+  }
+
+  .question:active {
+    transform: scale(0.99);
+    transition: transform 0.1s ease;
+  }
+
+  .questionHead {
+    margin-bottom: 12px;
+  }
+
+  .questionNumber {
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  .questionInput {
+    font-size: 0.95rem;
+    padding: 8px 12px;
+    border-radius: 8px;
+  }
+
+  .questionTypeSelect {
+    font-size: 0.9rem;
+    padding: 8px 28px 8px 14px;
+    border-radius: 8px;
+    min-height: 40px;
+  }
+
+  .iconButton {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+  }
+
+  .iconButton:active {
+    transform: scale(0.95);
+  }
+
+  .radioFake {
+    width: 20px;
+    height: 20px;
+  }
+
+  .optionInput {
+    padding: 8px 12px;
+    font-size: 0.95rem;
+    border-radius: 8px;
+  }
+
+  .removeOptionBtn,
+  .optionMenuBtn {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+  }
+
+  .removeOptionBtn:active,
+  .optionMenuBtn:active {
+    transform: scale(0.95);
+  }
+
+  .addOptionBtn {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    min-height: 40px;
+  }
+
+  .addOptionBtn:active {
+    transform: scale(0.98);
+  }
+
+  .optionsCounter {
+    font-size: 0.8rem;
+  }
+
+  .actions {
+    margin-top: 24px;
+    gap: 12px;
+  }
+
+  .primaryBtn,
+  .outlineBtn,
+  .ghostBtn {
+    padding: 12px 20px;
+    font-size: 0.95rem;
+    border-radius: 10px;
+    min-height: 44px;
+  }
+
+  .primaryBtn:active,
+  .outlineBtn:active,
+  .ghostBtn:active {
+    transform: scale(0.98);
+  }
+
+  .ghostBtn {
+    padding: 10px 18px;
+  }
+
+  .plusIcon {
+    font-size: 24px;
+  }
+
+  .helperLinks {
+    font-size: 0.9rem;
+  }
+
+  .error {
+    padding: 14px 16px;
+    font-size: 0.9rem;
+    border-radius: 10px;
   }
 }

@@ -12,6 +12,7 @@ import {
   getResponses as apiGetResponses,
   getSurvey as apiGetSurvey,
   getSurveys as apiGetSurveys,
+  publishSurvey as apiPublishSurvey,
   submitResponse as apiSubmitResponse,
   updateQuestion as apiUpdateQuestion,
   updateSurvey as apiUpdateSurvey,
@@ -24,6 +25,7 @@ export type UseSurveysApi = {
   refresh: () => void
   getSurveyById: (id: string) => Promise<Survey | null>
   upsertSurvey: (survey: Survey) => Promise<string>
+  publishSurvey: (surveyId: string) => Promise<string>
   deleteSurvey: (id: string) => void
   addQuestion: (surveyId: string, question: Question) => Promise<void>
   updateQuestion: (surveyId: string, questionId: string, question: Question) => Promise<void>
@@ -83,6 +85,7 @@ export function useSurveys(): UseSurveysApi {
     try {
       setIsLoading(true)
       const apiSurveys = await apiGetSurveys()
+      console.log('API surveys from server:', apiSurveys)
       const convertedSurveys = apiSurveys.map(s => ({
         id: s.id,
         public_id: s.public_id,
@@ -91,6 +94,7 @@ export function useSurveys(): UseSurveysApi {
         status: s.status,
         questions: [],
       }))
+      console.log('Converted surveys:', convertedSurveys)
       setSurveys(convertedSurveys)
     } catch (error) {
       console.error('Failed to load surveys:', error)
@@ -133,6 +137,21 @@ export function useSurveys(): UseSurveysApi {
       throw error
     }
   }, [])
+
+  // ИСПРАВЛЕННАЯ ФУНКЦИЯ - без вызова refresh()
+  const publishSurvey = useCallback(async (surveyId: string): Promise<string> => {
+    try {
+      console.log('🔵 publishSurvey called with ID:', surveyId);
+      const result = await apiPublishSurvey(surveyId)
+      console.log('✅ publishSurvey completed');
+      // Обновляем список опросов, чтобы получить актуальный public_id
+      await refresh()
+      return result.public_url
+    } catch (error) {
+      console.error('Failed to publish survey:', error)
+      throw error
+    }
+  }, [refresh])
 
   const deleteSurvey = useCallback(async (id: string) => {
     try {
@@ -201,10 +220,18 @@ export function useSurveys(): UseSurveysApi {
   const stats = useMemo(() => {
     const published = surveys.filter((s) => s.status === 'published').length
     const all = loadAllResponses()
+    console.log('All responses from localStorage:', all)
+    console.log('Surveys:', surveys)
+    
     let totalResponses = 0
     for (const s of surveys) {
-      totalResponses += (all[s.id] ?? []).length
+      const surveyResponses = all[s.id] ?? []
+      console.log(`Survey ${s.id} has ${surveyResponses.length} responses`)
+      totalResponses += surveyResponses.length
     }
+    
+    console.log('Total responses:', totalResponses)
+    
     return {
       activeSurveys: published,
       respondents: totalResponses,
@@ -218,6 +245,7 @@ export function useSurveys(): UseSurveysApi {
     refresh,
     getSurveyById,
     upsertSurvey,
+    publishSurvey,
     deleteSurvey,
     addQuestion,
     updateQuestion,
@@ -228,3 +256,4 @@ export function useSurveys(): UseSurveysApi {
     responsesTick,
   }
 }
+

@@ -47,7 +47,15 @@ export default function RegisterPage() {
       await register(email, password, username)
       navigate('/', { replace: true })
     } catch (err) {
-      setErrors({ form: err instanceof Error ? err.message : 'Ошибка при регистрации' })
+      let errorMessage = 'Ошибка при регистрации'
+      if (err instanceof Error) {
+        errorMessage = err.message
+      } else if (typeof err === 'object' && err !== null && 'message' in err) {
+        errorMessage = String(err.message)
+      } else if (typeof err === 'string') {
+        errorMessage = err
+      }
+      setErrors({ form: errorMessage })
     } finally {
       setIsLoading(false)
     }

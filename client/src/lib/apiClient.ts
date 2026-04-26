@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8000'
+const API_BASE_URL = 'http://localhost:8080/api'
 
 export class ApiError extends Error {
   constructor(
@@ -14,13 +14,29 @@ export class ApiError extends Error {
 async function handleResponse(response: Response): Promise<unknown> {
   if (!response.ok) {
     let message = 'Ошибка запроса к серверу'
+    let errorDetails: unknown = null
+
     try {
       const errorData = await response.json()
-      message = (errorData as { detail?: string }).detail || message
+      errorDetails = errorData
+      message = (errorData as { detail?: string; message?: string; error?: string }).detail ||
+                (errorData as { detail?: string; message?: string; error?: string }).message ||
+                (errorData as { detail?: string; message?: string; error?: string }).error ||
+                message
+
+      console.error('API Error:', {
+        status: response.status,
+        statusText: response.statusText,
+        errorData
+      })
     } catch {
-      // Если не удалось распарсить JSON, используем стандартное сообщение
+      console.error('API Error:', {
+        status: response.status,
+        statusText: response.statusText,
+        body: await response.text()
+      })
     }
-    throw new ApiError(message, response.status)
+    throw new ApiError(message, response.status, errorDetails)
   }
   return response.json()
 }

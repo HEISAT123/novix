@@ -40,9 +40,10 @@ export interface SubmitResponseRequest {
 }
 
 export interface ResponseItem {
-  id: string
-  submitted_at: string
-  answers: AnswersMap
+  question_id: string
+  respondent_session_id: string
+  answer: string | null
+  created_at: string | null
 }
 
 export interface QuestionOption {
@@ -55,7 +56,7 @@ export interface ApiQuestion {
   text: string
   type: 'single_choice' | 'text'
   order_index: number
-  options: QuestionOption[]
+  options?: QuestionOption[]
 }
 
 export interface ApiSurveyDetail {
@@ -63,13 +64,13 @@ export interface ApiSurveyDetail {
   public_id: string | null
   title: string
   description: string
-  status: 'draft' | 'published'
-  created_at: string
-  questions: ApiQuestion[]
+  status?: 'draft' | 'published'
+  created_at?: string
+  questions?: ApiQuestion[]
 }
 
 export async function getSurveys(): Promise<SurveyListItem[]> {
-  return get<SurveyListItem[]>('/surveys')
+  return get<SurveyListItem[]>('/surveys/')
 }
 
 export async function getSurvey(surveyId: string): Promise<ApiSurveyDetail> {
@@ -77,7 +78,7 @@ export async function getSurvey(surveyId: string): Promise<ApiSurveyDetail> {
 }
 
 export async function createSurvey(data: CreateSurveyRequest): Promise<ApiSurveyDetail> {
-  return post<ApiSurveyDetail>('/surveys', data)
+  return post<ApiSurveyDetail>('/surveys/', data)
 }
 
 export async function updateSurvey(surveyId: string, data: UpdateSurveyRequest): Promise<{ message: string }> {
@@ -86,6 +87,10 @@ export async function updateSurvey(surveyId: string, data: UpdateSurveyRequest):
 
 export async function deleteSurvey(surveyId: string): Promise<{ message: string }> {
   return del<{ message: string }>(`/surveys/${surveyId}`)
+}
+
+export async function publishSurvey(surveyId: string): Promise<{ message: string; public_url: string }> {
+  return post<{ message: string; public_url: string }>(`/surveys/${surveyId}/publish`, {})
 }
 
 export async function addQuestion(surveyId: string, data: AddQuestionRequest): Promise<{ message: string; question: ApiQuestion }> {
@@ -109,11 +114,11 @@ export async function getResponses(surveyId: string): Promise<ResponseItem[]> {
 }
 
 export async function getPublicSurvey(publicId: string): Promise<ApiSurveyDetail> {
-  return get<ApiSurveyDetail>(`/public/surveys/${publicId}`)
+  return get<ApiSurveyDetail>(`/surveys/public/${publicId}`)
 }
 
 export async function submitPublicResponse(publicId: string, data: SubmitResponseRequest): Promise<{ message: string }> {
-  return post<{ message: string }>(`/public/surveys/${publicId}/responses`, data)
+  return post<{ message: string }>(`/surveys/public/${publicId}/responses`, data)
 }
 
 function convertApiQuestionToQuestion(apiQuestion: ApiQuestion): Question {
@@ -122,7 +127,7 @@ function convertApiQuestionToQuestion(apiQuestion: ApiQuestion): Question {
       id: apiQuestion.id,
       type: 'single',
       text: apiQuestion.text,
-      options: apiQuestion.options.map(opt => opt.text),
+      options: (apiQuestion.options || []).map(opt => opt.text),
     }
   }
   return {
@@ -138,8 +143,8 @@ export function convertApiSurveyToSurvey(apiSurvey: ApiSurveyDetail): Survey {
     public_id: apiSurvey.public_id,
     title: apiSurvey.title,
     description: apiSurvey.description,
-    status: apiSurvey.status,
-    created_at: apiSurvey.created_at,
-    questions: apiSurvey.questions.map(convertApiQuestionToQuestion),
+    status: apiSurvey.status || 'published',
+    created_at: apiSurvey.created_at || new Date().toISOString(),
+    questions: (apiSurvey.questions || []).map(convertApiQuestionToQuestion),
   }
 }

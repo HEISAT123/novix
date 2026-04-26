@@ -3,14 +3,15 @@
   flex-direction: column;
   min-height: 100dvh;
   min-height: 100vh;
+  min-width: 320px;
   background: var(--page-bg);
 }
 
-.appShellRow {
-  display: flex;
+.appMain {
   flex: 1;
-  min-height: 0;
-  align-items: stretch;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .appTopBar {
@@ -31,6 +32,10 @@
   min-width: 0;
 }
 
+.appLogo {
+  flex-shrink: 0;
+}
+
 .appTopBarBack {
   display: flex;
   align-items: center;
@@ -44,7 +49,7 @@
 
 .appTopBarTitle {
   margin: 0;
-  font-size: 1.3rem;
+  font-size: 1.35rem;
   font-weight: 400;
   letter-spacing: -0.02em;
   color: var(--title-muted);
@@ -84,7 +89,7 @@
 
 .userName {
   font-weight: 500;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: var(--text);
   max-width: 120px;
   overflow: hidden;
@@ -99,7 +104,7 @@
   background: var(--primary);
   color: var(--white);
   font-weight: 500;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   text-decoration: none;
   cursor: pointer;
   transition: background-color 0.15s ease;
@@ -116,7 +121,7 @@
   background: transparent;
   color: var(--muted);
   font-weight: 500;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -125,41 +130,6 @@
   background: var(--primary-soft);
   color: var(--primary);
   border-color: var(--primary-border);
-}
-
-.sidebar {
-  width: 72px;
-  flex-shrink: 0;
-  background: var(--surface);
-  border-right: 1px solid var(--line);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 14px 0;
-}
-
-.sidebarLink {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 50px;
-  height: 50px;
-  border-radius: 14px;
-  color: var(--muted);
-  text-decoration: none;
-  transition: background-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-.sidebarLinkActive {
-  background: var(--sidebar-active);
-  box-shadow: 0 0 0 1px var(--sidebar-active-shadow);
-}
-
-.appMain {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
 }
 
 .appMainBody {
@@ -176,13 +146,75 @@
   .appTopBarTitle {
     font-size: 1.35rem;
   }
+}
 
-  .sidebar {
-    width: 62px;
+@media (max-width: 768px) {
+  .appTopBar {
+    gap: 12px;
+    padding: 0 12px 0 10px;
   }
 
-  .sidebarLink {
-    width: 44px;
-    height: 44px;
+  .appTopBarTitle {
+    font-size: 1.15rem;
+  }
+
+  .appTopBarActions {
+    gap: 8px;
+  }
+
+  .userName {
+    max-width: 80px;
+    font-size: 0.85rem;
+  }
+
+  .loginBtn {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+
+  .logoutBtn {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .appTopBar {
+    min-height: 56px;
+    padding: 0 12px 0 12px;
+    border-bottom: none;
+  }
+
+  .appTopBarTitle {
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+
+  .appTopBarBack {
+    width: 36px;
+    height: 36px;
+    margin-left: 0;
+  }
+
+  .appTopBarAvatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .userName {
+    max-width: 60px;
+    font-size: 0.75rem;
+  }
+
+  .loginBtn {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    border-radius: 8px;
+  }
+
+  .logoutBtn {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    border-radius: 8px;
   }
 }

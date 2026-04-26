@@ -34,15 +34,15 @@
 
 .title {
   margin: 0 0 100px;
-  font-size: 2rem;
-  white-space: nowrap;
+  font-size: 2.1rem;
+  white-space: normal;
 }
 
 .homeLink {
   background: #C5C3E6;
   color: #4a4a4a;
   text-decoration: none;
-  font-size: 0.95rem;
+  font-size: 1rem;
   padding: 8px 50px;
   border-radius: 4px;
   transition: background 0.2s ease;
@@ -51,4 +51,69 @@
 .homeLink:hover {
   background: #a4a1e2;
   text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .wrap {
+    padding: 20px;
+  }
+
+  .inner {
+    max-width: 320px;
+  }
+
+  .icon {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+
+    svg {
+      width: 35px;
+      height: 35px;
+    }
+  }
+
+  .title {
+    font-size: 1.7rem;
+    margin-bottom: 80px;
+  }
+
+  .homeLink {
+    padding: 8px 40px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .wrap {
+    padding: 16px;
+  }
+
+  .inner {
+    max-width: 100%;
+  }
+
+  .icon {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 16px;
+    font-size: 1.5rem;
+
+    svg {
+      width: 30px;
+      height: 30px;
+    }
+  }
+
+  .title {
+    font-size: 1.4rem;
+    margin-bottom: 60px;
+    white-space: normal;
+  }
+
+  .homeLink {
+    padding: 8px 32px;
+    font-size: 0.85rem;
+  }
 }

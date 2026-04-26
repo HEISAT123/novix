@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useSurveyContext } from '../../../../hooks/useSurveyContext'
 import type { AnswersMap, QuestionSingle, Survey } from '../../../../types/survey'
+import type { ResponseItem } from '../../../../api/surveysApi'
 import styles from './ResultsPage.module.scss'
 
 interface ApiResponse {
@@ -58,8 +59,27 @@ export default function ResultsPage() {
       if (!survey) return
 
       try {
-        const apiResponses = await getResponses(survey.id)
-        setResponses(apiResponses)
+        const apiResponses: ResponseItem[] = await getResponses(survey.id)
+        
+        // Группируем плоский список по сессиям респондентов
+        const groupedBySession: Record<string, ApiResponse> = {}
+        
+        for (const response of apiResponses) {
+          const sessionId = response.respondent_session_id
+          if (!groupedBySession[sessionId]) {
+            groupedBySession[sessionId] = {
+              id: sessionId,
+              submitted_at: response.created_at || '',
+              answers: {}
+            }
+          }
+          
+          if (response.answer !== null) {
+            groupedBySession[sessionId].answers[response.question_id] = response.answer
+          }
+        }
+        
+        setResponses(Object.values(groupedBySession))
       } catch (error) {
         console.error('Failed to load responses:', error)
         setResponses([])

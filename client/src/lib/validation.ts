@@ -8,6 +8,30 @@ export interface ValidationResult {
   errors: ValidationError[]
 }
 
+// Санитизация ввода для защиты от XSS
+export function sanitizeInput(input: string): string {
+  if (!input) return input
+  return input
+    .replace(/[<>]/g, '') // Удаляем угловые скобки
+    .replace(/javascript:/gi, '') // Удаляем javascript: протокол
+    .replace(/on\w+=/gi, '') // Удаляем обработчики событий
+    .trim()
+}
+
+// Проверка на потенциально опасный контент
+export function containsXSS(input: string): boolean {
+  const xssPatterns = [
+    /<script/i,
+    /javascript:/i,
+    /on\w+\s*=/i,
+    /<iframe/i,
+    /<object/i,
+    /<embed/i,
+    /data:/i,
+  ]
+  return xssPatterns.some(pattern => pattern.test(input))
+}
+
 export function validateEmail(email: string): ValidationError | null {
   if (!email) {
     return { field: 'email', message: 'Укажите email' }
@@ -40,6 +64,10 @@ export function validatePassword(password: string): ValidationError | null {
 export function validateUsername(username: string): ValidationError | null {
   if (!username) {
     return { field: 'username', message: 'Укажите имя пользователя' }
+  }
+  
+  if (containsXSS(username)) {
+    return { field: 'username', message: 'Имя пользователя содержит недопустимые символы' }
   }
   
   if (username.trim().length < 2) {
@@ -104,10 +132,16 @@ export function validateLoginForm(data: {
 
   if (!data.email) {
     errors.push({ field: 'email', message: 'Введите имя пользователя' })
+  } else {
+    const emailError = validateEmail(data.email)
+    if (emailError) errors.push(emailError)
   }
 
   if (!data.password) {
     errors.push({ field: 'password', message: 'Введите пароль' })
+  } else {
+    const passwordError = validatePassword(data.password)
+    if (passwordError) errors.push(passwordError)
   }
 
   return {
@@ -119,6 +153,10 @@ export function validateLoginForm(data: {
 export function validateAnswer(answer: string, questionId: string): ValidationError | null {
   if (!answer || !answer.trim()) {
     return { field: questionId, message: 'Пожалуйста, ответьте на вопрос' }
+  }
+
+  if (containsXSS(answer)) {
+    return { field: questionId, message: 'Ответ содержит недопустимые символы' }
   }
 
   if (answer.trim().length > 1000) {
@@ -147,4 +185,68 @@ export function validateSurveyForm(answers: Record<string, string>, questions: A
     isValid: errors.length === 0,
     errors,
   }
+}
+
+// Валидация заголовка опроса
+export function validateSurveyTitle(title: string): ValidationError | null {
+  if (!title || !title.trim()) {
+    return { field: 'title', message: 'Укажите название опроса' }
+  }
+
+  if (containsXSS(title)) {
+    return { field: 'title', message: 'Название содержит недопустимые символы' }
+  }
+
+  if (title.trim().length > 255) {
+    return { field: 'title', message: 'Название не может превышать 255 символов' }
+  }
+
+  return null
+}
+
+// Валидация описания опроса
+export function validateSurveyDescription(description: string): ValidationError | null {
+  if (description && containsXSS(description)) {
+    return { field: 'description', message: 'Описание содержит недопустимые символы' }
+  }
+
+  if (description && description.trim().length > 5000) {
+    return { field: 'description', message: 'Описание не может превышать 5000 символов' }
+  }
+
+  return null
+}
+
+// Валидация текста вопроса
+export function validateQuestionText(text: string): ValidationError | null {
+  if (!text || !text.trim()) {
+    return { field: 'text', message: 'Укажите текст вопроса' }
+  }
+
+  if (containsXSS(text)) {
+    return { field: 'text', message: 'Текст вопроса содержит недопустимые символы' }
+  }
+
+  if (text.trim().length > 1000) {
+    return { field: 'text', message: 'Текст вопроса не может превышать 1000 символов' }
+  }
+
+  return null
+}
+
+// Валидация варианта ответа
+export function validateOptionText(text: string): ValidationError | null {
+  if (!text || !text.trim()) {
+    return { field: 'option', message: 'Укажите вариант ответа' }
+  }
+
+  if (containsXSS(text)) {
+    return { field: 'option', message: 'Вариант ответа содержит недопустимые символы' }
+  }
+
+  if (text.trim().length > 500) {
+    return { field: 'option', message: 'Вариант ответа не может превышать 500 символов' }
+  }
+
+  return null
 }
