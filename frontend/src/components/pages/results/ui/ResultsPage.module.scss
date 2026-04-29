@@ -5,7 +5,7 @@
 }
 
 .title {
-  font-size: 1.55rem;
+  font-size: 1.5rem;
   font-weight: 600;
   margin: 0 0 20px;
   color: var(--text);
@@ -16,14 +16,14 @@
 }
 
 .surveyTitle {
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   font-weight: 600;
   margin: 0 0 4px;
   color: var(--text);
 }
 
 .responseCount {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: var(--muted);
 }
 
@@ -78,20 +78,20 @@
 }
 
 .cardLabel {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   color: var(--muted-text);
   font-weight: 600;
   margin-right: 8px;
 }
 
 .cardMuted {
-  font-size: 0.87rem;
+  font-size: 0.82rem;
   color: var(--muted);
 }
 
 .cardTitle {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 450;
 }
 
@@ -124,7 +124,6 @@
   min-width: 80px;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  font-size: 1.05rem;
 }
 
 .barTrack {
@@ -144,7 +143,7 @@
 }
 
 .percentage {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 500;
   color: var(--text);
   min-width: 40px;
@@ -169,13 +168,13 @@
 
 .textValue {
   flex: 1;
-  font-size: 1rem;
+  font-size: 0.95rem;
   line-height: 1.4;
   margin-left: 20px;
 }
 
 .latestAnswersHeader {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 500;
   color: var(--muted);
   margin: 0 0 12px;
@@ -194,7 +193,7 @@
   color: var(--text);
   border: none;
   border-radius: 4px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
@@ -448,5 +447,87 @@
   .showAllBtn {
     padding: 6px 10px;
     font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .page {
+    padding: 12px 8px 24px;
+  }
+
+  .title {
+    font-size: 1rem;
+    margin-bottom: 12px;
+  }
+
+  .surveyTitle {
+    font-size: 0.95rem;
+  }
+
+  .responseCount {
+    font-size: 0.8rem;
+  }
+
+  .tabs {
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .tab,
+  .tabActive {
+    padding: 5px 2px 7px;
+    font-size: 0.75rem;
+  }
+
+  .card {
+    padding: 10px;
+  }
+
+  .cardHead {
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .cardLabel {
+    font-size: 0.9rem;
+  }
+
+  .cardTitle {
+    font-size: 0.85rem;
+  }
+
+  .barRow {
+    padding: 6px 6px;
+    margin-bottom: 8px;
+  }
+
+  .radioIcon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .optionText {
+    font-size: 0.8rem;
+    min-width: 40px;
+  }
+
+  .barTrack {
+    width: 60px;
+    height: 8px;
+  }
+
+  .percentage {
+    font-size: 0.75rem;
+    min-width: 28px;
+  }
+
+  .textValue {
+    font-size: 0.8rem;
+    margin-left: 6px;
+  }
+
+  .showAllBtn {
+    padding: 5px 8px;
+    font-size: 0.75rem;
   }
 }

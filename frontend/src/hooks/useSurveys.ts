@@ -86,13 +86,36 @@ export function useSurveys(): UseSurveysApi {
       setIsLoading(true)
       const apiSurveys = await apiGetSurveys()
       console.log('API surveys from server:', apiSurveys)
-      const convertedSurveys = apiSurveys.map(s => ({
+      
+      // Загружаем количество ответов для каждого опроса
+      const surveysWithCounts = await Promise.all(
+        apiSurveys.map(async (s) => {
+          try {
+            const responses = await apiGetResponses(s.id)
+            // Группируем по respondent_session_id для подсчёта уникальных респондентов
+            const uniqueRespondents = new Set(responses.map(r => r.respondent_session_id))
+            return {
+              ...s,
+              response_count: uniqueRespondents.size
+            }
+          } catch (error) {
+            console.error(`Failed to load responses for survey ${s.id}:`, error)
+            return {
+              ...s,
+              response_count: 0
+            }
+          }
+        })
+      )
+      
+      const convertedSurveys = surveysWithCounts.map(s => ({
         id: s.id,
         public_id: s.public_id,
         title: s.title,
         description: '',
         status: s.status,
         questions: [],
+        response_count: s.response_count
       }))
       console.log('Converted surveys:', convertedSurveys)
       setSurveys(convertedSurveys)

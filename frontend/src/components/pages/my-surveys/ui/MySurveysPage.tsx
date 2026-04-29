@@ -5,7 +5,6 @@ import activeSurveysIcon from '../../../../assets/activeSurveys.svg'
 import totalResponsesIcon from '../../../../assets/totalResponses.svg'
 import { useAuth } from '../../../../context/useAuth'
 import { useSurveyContext } from '../../../../hooks/useSurveyContext'
-import { getResponsesForSurvey } from '../../../../lib/surveysStorage'
 import styles from './MySurveysPage.module.scss'
 
 function StatCard({ icon, label }: { icon: ReactNode; label: string }) {
@@ -21,7 +20,7 @@ function StatCard({ icon, label }: { icon: ReactNode; label: string }) {
 
 export default function MySurveysPage() {
   const navigate = useNavigate()
-  const { surveys, stats, deleteSurvey } = useSurveyContext()
+  const { surveys, stats, deleteSurvey, isLoading } = useSurveyContext()
   const { user } = useAuth()
   const [showAuthMessage, setShowAuthMessage] = useState(false)
   const [copiedId, setCopiedId] = useState<string | null>(null)
@@ -82,12 +81,14 @@ export default function MySurveysPage() {
               aria-hidden
             />
           }
-          label={`Всего ответов: ${stats.totalResponses}`}
+          label={`Всего ответов: ${surveys.reduce((sum, s) => sum + (s.response_count || 0), 0)}`}
         />
       </section>
 
       <section className={styles.surveyGrid} aria-label="Список опросов">
-        {surveys.length === 0 ? (
+        {isLoading ? (
+          <p className={styles.emptyHint}>Загрузка опросов...</p>
+        ) : surveys.length === 0 ? (
           <p className={styles.emptyHint}>Пока нет опросов. Создайте первый.</p>
         ) : (
           surveys.map((s) => (
@@ -140,10 +141,7 @@ export default function MySurveysPage() {
                 {s.status === 'published' ? 'Опубликован' : 'Черновик'}
               </span>
               <p className={styles.surveyCardMeta}>
-                {(() => {
-                  const n = getResponsesForSurvey(s.id).length
-                  return `${n} ${pluralAnswers(n)}`
-                })()}
+                {`${s.response_count || 0} ${pluralAnswers(s.response_count || 0)}`}
               </p>
             </article>
           ))

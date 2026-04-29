@@ -50,8 +50,16 @@ export function validatePassword(password: string): ValidationError | null {
     return { field: 'password', message: 'Введите пароль' }
   }
   
-  if (password.length < 6) {
-    return { field: 'password', message: 'Пароль должен быть не менее 6 символов' }
+  if (password.length < 8) {
+    return { field: 'password', message: 'Пароль должен быть не менее 8 символов' }
+  }
+  
+  if (!/[A-Z]/.test(password)) {
+    return { field: 'password', message: 'Пароль должен содержать заглавную букву' }
+  }
+  
+  if (!/[0-9]/.test(password)) {
+    return { field: 'password', message: 'Пароль должен содержать цифру' }
   }
   
   if (password.length > 128) {

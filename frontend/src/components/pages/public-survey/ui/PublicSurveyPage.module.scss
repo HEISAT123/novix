@@ -167,6 +167,66 @@
   }
 }
 
+@media (max-width: 360px) {
+  .page {
+    padding: 0 10px 36px;
+    padding-top: 8px;
+  }
+
+  .progressBar {
+    height: 4px;
+    margin-bottom: 16px;
+  }
+
+  .card {
+    padding: 18px 14px;
+    border-radius: 12px;
+  }
+
+  .title {
+    font-size: 1.1rem;
+  }
+
+  .desc {
+    font-size: 0.85rem;
+  }
+
+  .question {
+    padding: 14px 10px;
+    border-radius: 10px;
+  }
+
+  .qText {
+    font-size: 0.95rem;
+  }
+
+  .radioLabel {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .radioDot {
+    width: 22px;
+    height: 22px;
+  }
+
+  .radioText {
+    font-size: 0.95rem;
+  }
+
+  .input {
+    padding: 12px 14px;
+    font-size: 0.95rem;
+    min-height: 46px;
+  }
+
+  .primaryBtn {
+    padding: 12px 18px;
+    font-size: 0.95rem;
+    min-height: 46px;
+  }
+}
+
 .progressFill {
   height: 100%;
   background: var(--primary);
@@ -207,7 +267,6 @@
 .qText {
   margin: 0 0 8px;
   font-weight: 500;
-  font-size: 1.05rem;
 }
 
 .radioLabel {
@@ -240,7 +299,6 @@
   word-break: break-all;
   overflow-wrap: anywhere;
   white-space: normal;
-  font-size: 1.05rem;
 }
 
 .radioLabel input:checked + .radioDot {
@@ -272,7 +330,6 @@
   max-height: 280px;
   overflow: hidden;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
-  font-size: 1.05rem;
 }
 
 .input:focus {
@@ -292,7 +349,7 @@
   display: block;
   margin-top: 6px;
   padding: 4px 0;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--error);
   font-weight: 500;
   line-height: 1.4;
@@ -317,7 +374,7 @@
   border: 1px solid var(--error-border);
   border-radius: 10px;
   color: var(--error);
-  font-size: 1.05rem;
+  font-size: 1rem;
   margin-bottom: 20px;
 }
 
@@ -336,7 +393,6 @@
   min-width: 180px;
   cursor: pointer;
   transition: background-color 0.15s ease;
-  font-size: 1.05rem;
 }
 
 .primaryBtn:hover:not(:disabled) {

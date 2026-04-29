@@ -129,7 +129,7 @@ export default function RegisterPage() {
               clearFieldError('password')
             }}
             onBlur={() => handleFieldBlur('password', password)}
-            placeholder="Минимум 6 символов"
+            placeholder="Минимум 8 символов, заглавная буква и цифра"
           />
           {getFieldError('password') && <span className={styles.fieldError}>{getFieldError('password')}</span>}
         </div>

@@ -23,6 +23,7 @@ export type Survey = {
   status: SurveyStatus
   created_at?: string
   questions: Question[]
+  response_count?: number
 }
 
 export type SurveyResponseRow = {
