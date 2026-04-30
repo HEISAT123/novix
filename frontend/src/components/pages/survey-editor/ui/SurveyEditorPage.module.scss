@@ -478,8 +478,77 @@
   font-weight: 500;
 }
 
+.statusRow {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.statusToggle {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  overflow: hidden;
+  width: fit-content;
+}
+
+.statusOption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: none;
+  background: var(--white);
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+
+  &:not(:last-child) {
+    border-right: 1px solid var(--border-color);
+  }
+
+  &:hover:not(:disabled) {
+    background: var(--accent-rgba-focus);
+    color: var(--title-color);
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.7;
+  }
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.statusActive {
+  background: var(--primary);
+  color: var(--white);
+  font-weight: 500;
+
+  &:hover:not(:disabled) {
+    background: var(--primary);
+    color: var(--white);
+    opacity: 0.9;
+  }
+
+  &:disabled {
+    opacity: 1;
+  }
+
+  svg {
+    stroke: var(--white);
+  }
+}
+
 .helperLinks {
-  margin: 14px 0 0;
+  margin: 0;
   color: var(--muted);
   font-size: 0.92rem;
 }
@@ -785,6 +854,17 @@
 
   .helperLinks {
     font-size: 0.9rem;
+  }
+
+  .statusToggle {
+    width: 100%;
+  }
+
+  .statusOption {
+    flex: 1;
+    justify-content: center;
+    padding: 10px 14px;
+    font-size: 0.85rem;
   }
 
   .error {

@@ -26,9 +26,6 @@ const SaveSurveyPopup: React.FC<SaveSurveyPopupProps> = ({
     <div className={styles.overlay} onClick={handleOverlayClick}>
       <div className={styles.popup}>
         <h2 className={styles.title}>Опрос сохранён!</h2>
-        <button onClick={handleGoToMain} className={styles.button}>
-          На главный
-        </button>
       </div>
     </div>
   )

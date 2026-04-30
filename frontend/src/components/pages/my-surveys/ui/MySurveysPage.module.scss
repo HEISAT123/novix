@@ -53,7 +53,7 @@
 
 .surveyGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 20px;
   margin-bottom: 34px;
   width: 100%;
@@ -114,7 +114,13 @@
   transition: border-color 0.15s, color 0.15s, background-color 0.15s;
 }
 
-.shareBtn {
+.deleteBtn:hover {
+  border-color: var(--delete-btn-border);
+  background: var(--white);
+}
+
+.shareBtn,
+.qrBtn {
   width: 28px;
   height: 28px;
   border: 1px solid var(--line);
@@ -130,14 +136,81 @@
   transition: border-color 0.15s, color 0.15s, background-color 0.15s;
 }
 
-.shareBtn:hover {
+.shareBtn:hover,
+.qrBtn:hover {
   border-color: var(--delete-btn-border);
   background: var(--white);
+  color: var(--title-color);
 }
 
-.deleteBtn:hover {
-  border-color: var(--delete-btn-border);
+.shareBtnCopied {
+  color: var(--success-text) !important;
+  border-color: var(--success) !important;
+  background: var(--success) !important;
+
+  svg {
+    stroke: var(--white) !important;
+  }
+}
+
+.qrOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.qrPopup {
   background: var(--white);
+  border-radius: 12px;
+  padding: 32px 40px;
+  width: 90%;
+  max-width: 360px;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+
+  h3 {
+    margin: 0 0 20px;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--title-color);
+  }
+}
+
+.qrCode {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.qrLink {
+  font-size: 0.8rem;
+  color: var(--muted);
+  word-break: break-all;
+  margin-bottom: 20px;
+}
+
+.closeQrBtn {
+  width: 100%;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  background: var(--primary);
+  color: var(--white);
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.9;
+  }
 }
 
 .badgeOk,
@@ -198,7 +271,7 @@
   }
 
   .surveyGrid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 18px;
   }
 }
@@ -229,7 +302,7 @@
   }
 
   .surveyGrid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 16px;
   }
 
@@ -341,14 +414,16 @@
     transform: scale(0.95);
   }
 
-  .shareBtn {
+  .shareBtn,
+  .qrBtn {
     width: 32px;
     height: 32px;
     font-size: 0.95rem;
     border-radius: 8px;
   }
 
-  .shareBtn:active {
+  .shareBtn:active,
+  .qrBtn:active {
     transform: scale(0.95);
   }
 
@@ -431,7 +506,8 @@
   }
 
   .deleteBtn,
-  .shareBtn {
+  .shareBtn,
+  .qrBtn {
     width: 28px;
     height: 28px;
   }

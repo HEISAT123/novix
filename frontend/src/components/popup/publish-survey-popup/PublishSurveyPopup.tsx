@@ -1,4 +1,5 @@
 import React from 'react'
+import { QRCodeSVG } from 'qrcode.react'
 import styles from './PublishSurveyPopup.module.scss'
 
 interface PublishSurveyPopupProps {
@@ -32,16 +33,19 @@ const PublishSurveyPopup: React.FC<PublishSurveyPopupProps> = ({
     <div className={styles.overlay} onClick={handleOverlayClick}>
       <div className={styles.popup}>
         <h2 className={styles.title}>Ваша ссылка:</h2>
-        <input 
-          type="text" 
-          value={surveyLink} 
-          readOnly 
-          className={styles.linkInput} 
+        <input
+          type="text"
+          value={surveyLink}
+          readOnly
+          className={styles.linkInput}
         />
         <button onClick={handleCopyLink} className={styles.copyButton}>
           <CopyIcon />
           <span>Скопировать ссылку</span>
         </button>
+        <div className={styles.qrCode}>
+          <QRCodeSVG value={surveyLink} size={160} />
+        </div>
       </div>
     </div>
   )

@@ -93,6 +93,10 @@ export async function publishSurvey(surveyId: string): Promise<{ message: string
   return post<{ message: string; public_url: string }>(`/surveys/${surveyId}/publish`, {})
 }
 
+export async function unpublishSurvey(surveyId: string): Promise<{ message: string }> {
+  return post<{ message: string }>(`/surveys/${surveyId}/unpublish`, {})
+}
+
 export async function addQuestion(surveyId: string, data: AddQuestionRequest): Promise<{ message: string; question: ApiQuestion }> {
   return post<{ message: string; question: ApiQuestion }>(`/surveys/${surveyId}/questions`, data)
 }

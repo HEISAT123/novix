@@ -46,6 +46,7 @@ export default function RegisterPage() {
     try {
       await register(email, password, username)
       navigate('/', { replace: true })
+      window.location.reload()
     } catch (err) {
       let errorMessage = 'Ошибка при регистрации'
       if (err instanceof Error) {

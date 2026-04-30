@@ -56,6 +56,7 @@ export function AppLayout() {
                 onClick={() => {
                   logout()
                   navigate('/')
+                  window.location.reload()
                 }}
                 aria-label="Выйти"
               >

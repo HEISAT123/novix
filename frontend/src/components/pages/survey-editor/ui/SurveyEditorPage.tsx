@@ -69,7 +69,7 @@ const validateSurvey = (survey: Survey): string[] => {
 export default function SurveyEditorPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { upsertSurvey, getSurveyById, addQuestion, deleteQuestion, publishSurvey } = useSurveyContext()
+  const { upsertSurvey, getSurveyById, addQuestion, deleteQuestion, publishSurvey, unpublishSurvey } = useSurveyContext()
   const [addMenuOpen, setAddMenuOpen] = useState(false)
   const [openQuestionTypeMenu, setOpenQuestionTypeMenu] = useState<string | null>(null)
   const descriptionRef = React.useRef<HTMLTextAreaElement>(null)
@@ -183,6 +183,12 @@ export default function SurveyEditorPage() {
       // Публикуем, если нужно
       if (shouldPublish) {
         const link = await publishSurvey(surveyId)
+        
+        // Обновляем локальное состояние опроса с сервера
+        const freshSurvey = await getSurveyById(surveyId)
+        if (freshSurvey) {
+          setSurvey(normalizeSurvey(freshSurvey))
+        }
         
         setPublishedSurveyLink(link)
         setShowPublishPopup(true)
@@ -420,21 +426,48 @@ export default function SurveyEditorPage() {
               </div>
             )}
           </div>
-          <div className={styles.actions_save}>
-            <button type="button" className={styles.outlineBtn} onClick={() => commit(survey, true)} disabled={isSaving}>
-              {isSaving ? 'Сохранение...' : 'Сохранить черновик'}
+          <div className={styles.statusToggle}>
+            <button
+              type="button"
+              className={`${styles.statusOption} ${survey.status === 'draft' && (id !== 'new' || savedSurveyId) && !isSaving ? styles.statusActive : ''}`}
+              onClick={() => {
+                if (survey.status === 'published') {
+                  unpublishSurvey(survey.id).then(() => {
+                    setSurvey((s) => s ? { ...s, status: 'draft' } : s)
+                  })
+                } else if (!isSaving) {
+                  commit(survey, true)
+                }
+              }}
+              disabled={isSaving}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+              </svg>
+              {isSaving && survey.status === 'draft' ? 'Сохранение...' : (id !== 'new' || savedSurveyId) ? 'Черновик' : 'Сохранить черновик'}
             </button>
-            <button type="button" className={styles.primaryBtn} onClick={() => {
-              const errors = validateSurvey(survey)
-              if (errors.length > 0) {
-                setValidationError(errors[0])
-                return
-              }
-
-              setValidationError('')
-              commit(survey, true, true)
-            }} disabled={isSaving}>
-              {isSaving ? 'Публикация...' : 'Опубликовать'}
+            <button
+              type="button"
+              className={`${styles.statusOption} ${survey.status === 'published' && !isSaving ? styles.statusActive : ''}`}
+              onClick={() => {
+                if (survey.status === 'draft' && !isSaving) {
+                  const errors = validateSurvey(survey)
+                  if (errors.length > 0) {
+                    setValidationError(errors[0])
+                    return
+                  }
+                  setValidationError('')
+                  commit(survey, true, true)
+                }
+              }}
+              disabled={isSaving}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+              {isSaving && survey.status !== 'published' ? 'Публикация...' : survey.status === 'published' ? 'Опубликован' : 'Опубликовать'}
             </button>
           </div>
         </div>
@@ -443,10 +476,12 @@ export default function SurveyEditorPage() {
             {validationError}
           </div>
         )}
-        {survey.status === 'published' && (
-          <p className={styles.helperLinks}>
-            <Link to={`/survey/${survey.public_id}`}>Открыть опрос</Link> · <Link to={`/results/${survey.id}`}>Результаты</Link>
-          </p>
+        {survey.status === 'published' && survey.public_id && (
+          <div className={styles.statusRow}>
+            <p className={styles.helperLinks}>
+              <Link to={`/survey/${survey.public_id}`}>Открыть опрос</Link> · <Link to={`/results/${survey.id}`}>Результаты</Link>
+            </p>
+          </div>
         )}
       </div>
       

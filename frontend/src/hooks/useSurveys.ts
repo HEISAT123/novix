@@ -13,6 +13,7 @@ import {
   getSurvey as apiGetSurvey,
   getSurveys as apiGetSurveys,
   publishSurvey as apiPublishSurvey,
+  unpublishSurvey as apiUnpublishSurvey,
   submitResponse as apiSubmitResponse,
   updateQuestion as apiUpdateQuestion,
   updateSurvey as apiUpdateSurvey,
@@ -26,6 +27,7 @@ export type UseSurveysApi = {
   getSurveyById: (id: string) => Promise<Survey | null>
   upsertSurvey: (survey: Survey) => Promise<string>
   publishSurvey: (surveyId: string) => Promise<string>
+  unpublishSurvey: (surveyId: string) => Promise<void>
   deleteSurvey: (id: string) => void
   addQuestion: (surveyId: string, question: Question) => Promise<void>
   updateQuestion: (surveyId: string, questionId: string, question: Question) => Promise<void>
@@ -131,10 +133,13 @@ export function useSurveys(): UseSurveysApi {
   }, [refresh])
 
   useEffect(() => {
-    const onChange = () => setResponsesTick((x) => x + 1)
+    const onChange = () => {
+      setResponsesTick((x) => x + 1)
+      refresh()
+    }
     window.addEventListener('oprosi-responses-changed', onChange)
     return () => window.removeEventListener('oprosi-responses-changed', onChange)
-  }, [])
+  }, [refresh])
 
   const upsertSurvey = useCallback(async (survey: Survey) => {
     try {
@@ -172,6 +177,16 @@ export function useSurveys(): UseSurveysApi {
       return result.public_url
     } catch (error) {
       console.error('Failed to publish survey:', error)
+      throw error
+    }
+  }, [refresh])
+
+  const unpublishSurvey = useCallback(async (surveyId: string): Promise<void> => {
+    try {
+      await apiUnpublishSurvey(surveyId)
+      await refresh()
+    } catch (error) {
+      console.error('Failed to unpublish survey:', error)
       throw error
     }
   }, [refresh])
@@ -269,6 +284,7 @@ export function useSurveys(): UseSurveysApi {
     getSurveyById,
     upsertSurvey,
     publishSurvey,
+    unpublishSurvey,
     deleteSurvey,
     addQuestion,
     updateQuestion,

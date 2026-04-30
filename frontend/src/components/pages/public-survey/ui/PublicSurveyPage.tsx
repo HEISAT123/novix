@@ -84,6 +84,8 @@ export default function PublicSurveyPage() {
       await submitPublicResponse(survey.public_id, { answers })
       // Сохраняем ответ в localStorage для статистики
       appendResponse(survey.id, answers)
+      // Отправляем событие для обновления статистики
+      window.dispatchEvent(new Event('oprosi-responses-changed'))
       navigate(`/survey/${survey.public_id}/thanks`, { replace: true })
     } catch (err) {
       let errorMessage = 'Ошибка при отправке ответов'

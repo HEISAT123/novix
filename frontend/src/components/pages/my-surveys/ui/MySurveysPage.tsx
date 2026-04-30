@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { QRCodeSVG } from 'qrcode.react'
 import activeSurveysIcon from '../../../../assets/activeSurveys.svg'
 import totalResponsesIcon from '../../../../assets/totalResponses.svg'
 import { useAuth } from '../../../../context/useAuth'
@@ -24,6 +25,22 @@ export default function MySurveysPage() {
   const { user } = useAuth()
   const [showAuthMessage, setShowAuthMessage] = useState(false)
   const [copiedId, setCopiedId] = useState<string | null>(null)
+  const [qrSurveyId, setQrSurveyId] = useState<string | null>(null)
+
+  const handleShowQr = (publicId: string | null, e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (publicId) {
+      setQrSurveyId(publicId)
+    }
+  }
+
+  const handleCloseQr = () => {
+    setQrSurveyId(null)
+  }
+
+  const getSurveyLink = (publicId: string) => {
+    return `${window.location.origin}/survey/${publicId}`
+  }
 
   const handleDelete = (id: string) => {
     deleteSurvey(id)
@@ -109,19 +126,47 @@ export default function MySurveysPage() {
                 <h2 className={styles.surveyCardTitle}>{s.title || 'Без названия'}</h2>
                 <div className={styles.surveyCardActions}>
                   {s.status === 'published' && s.public_id && (
-                    <button
-                      type="button"
-                      className={styles.shareBtn}
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        console.log('Button clicked, public_id:', s.public_id)
-                        handleCopyLink(s.public_id)
-                      }}
-                      aria-label="Скопировать ссылку"
-                      title="Скопировать ссылку"
-                    >
-                      {copiedId === s.public_id ? '✓' : '🔗'}
-                    </button>
+                    <>
+                      <button
+                        type="button"
+                        className={styles.qrBtn}
+                        onClick={(e) => handleShowQr(s.public_id, e)}
+                        aria-label="Показать QR-код"
+                        title="Показать QR-код"
+                      >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="2" y="2" width="8" height="8" rx="1" />
+                          <rect x="14" y="2" width="8" height="8" rx="1" />
+                          <rect x="2" y="14" width="8" height="8" rx="1" />
+                          <rect x="14" y="14" width="4" height="4" rx="0.5" />
+                          <rect x="20" y="14" width="4" height="4" rx="0.5" />
+                          <rect x="14" y="20" width="4" height="4" rx="0.5" />
+                          <rect x="20" y="20" width="4" height="4" rx="0.5" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        className={`${styles.shareBtn} ${copiedId === s.public_id ? styles.shareBtnCopied : ''}`}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          console.log('Button clicked, public_id:', s.public_id)
+                          handleCopyLink(s.public_id)
+                        }}
+                        aria-label="Скопировать ссылку"
+                        title="Скопировать ссылку"
+                      >
+                        {copiedId === s.public_id ? (
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                        ) : (
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                          </svg>
+                        )}
+                      </button>
+                    </>
                   )}
                   <button
                     type="button"
@@ -147,6 +192,20 @@ export default function MySurveysPage() {
           ))
         )}
       </section>
+
+      {qrSurveyId && (
+        <div className={styles.qrOverlay} onClick={handleCloseQr}>
+          <div className={styles.qrPopup} onClick={(e) => e.stopPropagation()}>
+            <h3>QR-код опроса</h3>
+            <div className={styles.qrCode}>
+              <QRCodeSVG value={getSurveyLink(qrSurveyId)} size={200} />
+            </div>
+            <button className={styles.closeQrBtn} onClick={handleCloseQr}>
+              Закрыть
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className={styles.pageFooterCta}>
         <Link to="/edit/new" className={styles.primaryBtn} onClick={handleCreateSurveyClick}>

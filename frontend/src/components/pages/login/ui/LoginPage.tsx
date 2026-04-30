@@ -44,6 +44,7 @@ export default function LoginPage() {
     try {
       await login(email, password)
       navigate('/', { replace: true })
+      window.location.reload()
     } catch (err) {
       let errorMessage = 'Ошибка при входе'
       if (err instanceof Error) {
