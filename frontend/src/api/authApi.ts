@@ -19,7 +19,9 @@ export interface AuthResponse {
 }
 
 export async function register(data: RegisterRequest): Promise<AuthResponse> {
+  console.log('[authApi] register() вызов с данными:', { username: data.username, email: data.email })
   const response = await post<AuthResponse>('/auth/register', data)
+  console.log('[authApi] register() ответ:', response)
   localStorage.setItem('token', response.access_token)
   localStorage.setItem('user_id', response.user_id)
   localStorage.setItem('username', response.username)
@@ -27,7 +29,9 @@ export async function register(data: RegisterRequest): Promise<AuthResponse> {
 }
 
 export async function login(data: LoginRequest): Promise<AuthResponse> {
+  console.log('[authApi] login() вызов с email:', data.email)
   const response = await post<AuthResponse>('/auth/login', data)
+  console.log('[authApi] login() ответ:', response)
   localStorage.setItem('token', response.access_token)
   localStorage.setItem('user_id', response.user_id)
   localStorage.setItem('username', response.username)

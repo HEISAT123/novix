@@ -50,7 +50,9 @@ function getAuthHeader(): Record<string, string> {
 }
 
 export async function get<T>(path: string): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const url = `${API_BASE_URL}${path}`
+  console.log('[apiClient] GET запрос:', url)
+  const response = await fetch(url, {
     headers: {
       'Content-Type': 'application/json',
       ...getAuthHeader(),
@@ -60,7 +62,9 @@ export async function get<T>(path: string): Promise<T> {
 }
 
 export async function post<T>(path: string, body: unknown): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const url = `${API_BASE_URL}${path}`
+  console.log('[apiClient] POST запрос:', url, 'body:', body)
+  const response = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
