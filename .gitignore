@@ -50,4 +50,4 @@ htmlcov/
 *.local
 local.env
 dev.env
-.qwen
+.qwen/
