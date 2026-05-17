@@ -51,3 +51,5 @@ htmlcov/
 local.env
 dev.env
 /.qwen
+.qwen/
+.qwen

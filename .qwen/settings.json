@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(docker logs *)",
-      "Bash(select-object *)"
-    ]
-  },
-  "$version": 4
-}
