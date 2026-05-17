@@ -41,23 +41,13 @@ export default function RegisterPage() {
       return
     }
 
-    // Логирование данных перед отправкой
-    console.log('[RegisterPage] Отправка формы регистрации:', {
-      username,
-      email,
-      password: '***' // Не логируем пароль полностью
-    })
-
     setIsLoading(true)
 
     try {
-      console.log('[RegisterPage] Вызов API register...')
-      const result = await register(email, password, username)
-      console.log('[RegisterPage] Успешная регистрация:', result)
+      await register(email, password, username)
       navigate('/', { replace: true })
       window.location.reload()
     } catch (err) {
-      console.error('[RegisterPage] Ошибка регистрации:', err)
       let errorMessage = 'Ошибка при регистрации'
       if (err instanceof Error) {
         errorMessage = err.message
