@@ -1,6 +1,6 @@
 // Используем относительный путь /api/ для запросов внутри Docker
 // nginx проксирует эти запросы на backend:8000
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
+const API_BASE_URL = '/api';
 
 export class ApiError extends Error {
   constructor(
