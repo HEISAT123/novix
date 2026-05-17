@@ -67,7 +67,27 @@ export default function MySurveysPage() {
     }
     try {
       const link = `${window.location.origin}/survey/${publicId}`
-      await navigator.clipboard.writeText(link)
+      
+      // Пробуем современный API
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(link)
+      } else {
+        // Fallback для старых браузеров или HTTP
+        const textarea = document.createElement('textarea')
+        textarea.value = link
+        textarea.style.position = 'fixed'
+        textarea.style.opacity = '0'
+        document.body.appendChild(textarea)
+        textarea.select()
+        try {
+          document.execCommand('copy')
+        } catch (err) {
+          console.error('Failed to copy link:', err)
+          return
+        }
+        document.body.removeChild(textarea)
+      }
+      
       setCopiedId(publicId)
       setTimeout(() => setCopiedId(null), 2000)
     } catch (err) {
