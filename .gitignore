@@ -38,10 +38,6 @@ Thumbs.db
 *.log
 logs/
 
-# Database (may contain sensitive data)
-database/*.sql
-!database/.gitkeep
-
 # Docker
 *.tar
 
