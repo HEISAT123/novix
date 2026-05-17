@@ -95,17 +95,22 @@ export default function SurveyEditorPage() {
 
       if (id) {
         setIsLoading(true)
-        const fullSurvey = await getSurveyById(id)
-        if (fullSurvey) {
-          setSurvey(normalizeSurvey(fullSurvey))
-        } else {
+        try {
+          const fullSurvey = await getSurveyById(id)
+          if (fullSurvey) {
+            setSurvey(normalizeSurvey(fullSurvey))
+          } else {
+            setSurvey(null)
+          }
+        } catch (error) {
+          console.error('Failed to load survey:', error)
           setSurvey(null)
         }
         setIsLoading(false)
       }
     }
     loadSurvey()
-  }, [id, getSurveyById])
+  }, [id])
 
   useEffect(() => {
     if (descriptionRef.current) {

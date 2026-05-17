@@ -77,6 +77,10 @@ export function useSurveys(): UseSurveysApi {
   const [isLoading, setIsLoading] = useState(true)
 
   const getSurveyById = useCallback(async (id: string): Promise<Survey | null> => {
+    // Для 'new' возвращаем null — это сигнал создать новый опрос
+    if (id === 'new') {
+      return null
+    }
     try {
       const apiSurvey = await apiGetSurvey(id)
       return convertApiSurveyToSurvey(apiSurvey)
