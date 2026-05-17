@@ -20,6 +20,15 @@ import {
   type ResponseItem,
 } from '../api/surveysApi'
 
+// Функция для генерации UUID (альтернатива crypto.randomUUID для старых браузеров)
+function generateUUID(): string {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0
+    const v = c === 'x' ? r : (r & 0x3) | 0x8
+    return v.toString(16)
+  })
+}
+
 export type UseSurveysApi = {
   surveys: Survey[]
   isLoading: boolean
@@ -45,15 +54,15 @@ export type UseSurveysApi = {
 export function createEmptyQuestion(type: 'single'): QuestionSingle
 export function createEmptyQuestion(type: 'text'): QuestionText
 export function createEmptyQuestion(type: 'single' | 'text'): Question {
-  const id = crypto.randomUUID()
+  const id = generateUUID()
   if (type === 'single') {
     return {
       id,
       type: 'single',
       text: '',
       options: [
-        { id: crypto.randomUUID(), text: '' },
-        { id: crypto.randomUUID(), text: '' },
+        { id: generateUUID(), text: '' },
+        { id: generateUUID(), text: '' },
       ],
     }
   }
@@ -62,7 +71,7 @@ export function createEmptyQuestion(type: 'single' | 'text'): Question {
 
 export function createEmptySurvey(): Survey {
   return {
-    id: crypto.randomUUID(),
+    id: generateUUID(),
     public_id: null,
     title: '',
     description: '',

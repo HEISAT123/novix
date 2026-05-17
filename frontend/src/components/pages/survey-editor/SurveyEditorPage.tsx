@@ -10,6 +10,15 @@ import PublishSurveyPopup from '../../popup/publish-survey-popup/PublishSurveyPo
 import SaveSurveyPopup from '../../popup/save-survey-popup/SaveSurveyPopup'
 import trashcanIcon from '../../../assets/trashcan.svg'
 
+// Функция для генерации UUID (альтернатива crypto.randomUUID для старых браузеров)
+function generateUUID(): string {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0
+    const v = c === 'x' ? r : (r & 0x3) | 0x8
+    return v.toString(16)
+  })
+}
+
 const MIN_OPTIONS = 2
 const MAX_OPTIONS = 6
 
@@ -405,7 +414,7 @@ export default function SurveyEditorPage() {
                           ...s,
                           questions: s.questions.map((x) => {
                             if (x.id !== q.id || !isSingleQuestion(x)) return x
-                            return { ...x, options: [...x.options, { id: crypto.randomUUID(), text: '' }] }
+                            return { ...x, options: [...x.options, { id: generateUUID(), text: '' }] }
                           }),
                         })
                       : s,
