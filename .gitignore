@@ -1,0 +1,56 @@
+# Environment variables (SECRETS!)
+.env
+.env.local
+.env.*.local
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+*.egg-info/
+dist/
+build/
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Database (may contain sensitive data)
+database/*.sql
+!database/.gitkeep
+
+# Docker
+*.tar
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local development
+*.local
+local.env
+dev.env

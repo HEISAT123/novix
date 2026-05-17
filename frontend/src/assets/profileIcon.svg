@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="Profile avatar icon">
+  <rect width="1024" height="1024" fill="#ffffff"/>
+  <circle cx="512" cy="512" r="451" fill="none" stroke="#8b85f1" stroke-width="57"/>
+  <circle cx="512" cy="377" r="165" fill="#8b85f1"/>
+  <path fill="#8b85f1" d="M200 751C257 632 366 584 449 584h126c83 0 192 48 249 167-72 91-179 136-312 136S272 842 200 751Z"/>
+</svg>

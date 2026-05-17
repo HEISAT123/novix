@@ -1,0 +1,252 @@
+.appShell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  min-height: 100vh;
+  min-width: 320px;
+  background: var(--page-bg);
+}
+
+.appMain {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.appTopBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 70px;
+  padding: 0 22px 0 18px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+.appTopBarLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.appLogo {
+  flex-shrink: 0;
+}
+
+.appTopBarBack {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin-left: -4px;
+  border-radius: 10px;
+  text-decoration: none;
+}
+
+.appTopBarTitle {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--title-muted);
+}
+
+.appTopBarActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.appTopBarIconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.15s ease;
+}
+
+.appTopBarIconBtn:hover {
+  background: var(--primary-soft);
+}
+
+.appTopBarAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: block;
+  border: 1px solid var(--avatar-border);
+}
+
+.userName {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--text);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.loginBtn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 10px;
+  background: var(--primary);
+  color: var(--white);
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.loginBtn:hover {
+  background: var(--primary-hover);
+}
+
+.logoutBtn {
+  padding: 6px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.logoutBtn:hover {
+  background: var(--primary-soft);
+  color: var(--primary);
+  border-color: var(--primary-border);
+}
+
+.appMainBody {
+  flex: 1;
+  overflow: auto;
+}
+
+@media (max-width: 900px) {
+  .appTopBar {
+    min-height: 62px;
+    padding: 0 16px 0 14px;
+  }
+
+  .appTopBarTitle {
+    font-size: 1.35rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .appTopBar {
+    gap: 12px;
+    padding: 0 12px 0 10px;
+  }
+
+  .appTopBarTitle {
+    font-size: 1.15rem;
+  }
+
+  .appTopBarActions {
+    gap: 8px;
+  }
+
+  .userName {
+    font-size: 0.85rem;
+  }
+
+  .loginBtn {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+
+  .logoutBtn {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .appTopBar {
+    min-height: 56px;
+    padding: 0 12px 0 12px;
+    border-bottom: none;
+  }
+
+  .appTopBarTitle {
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+
+  .appTopBarBack {
+    width: 36px;
+    height: 36px;
+    margin-left: 0;
+  }
+
+  .appTopBarAvatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .userName {
+    font-size: 0.75rem;
+  }
+
+  .loginBtn {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+  }
+
+  .logoutBtn {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .appTopBar {
+    min-height: 52px;
+    padding: 0 10px 0 10px;
+  }
+
+  .appTopBarTitle {
+    font-size: 1rem;
+  }
+
+  .appTopBarBack {
+    width: 32px;
+    height: 32px;
+  }
+
+  .appTopBarAvatar {
+    width: 28px;
+    height: 28px;
+  }
+
+  .userName {
+    font-size: 0.7rem;
+  }
+
+  .loginBtn {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+
+  .logoutBtn {
+    padding: 5px 8px;
+    font-size: 0.75rem;
+  }
+}

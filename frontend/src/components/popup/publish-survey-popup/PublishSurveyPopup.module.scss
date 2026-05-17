@@ -1,0 +1,141 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popup {
+  background: var(--white);
+  border-radius: 5px;
+  padding: 40px 60px;
+  width: 90%;
+  max-width: 420px;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+}
+
+.title {
+  margin: 0 0 20px;
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--title-muted);
+}
+
+.linkInput {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--purple-border);
+  border-radius: 8px;
+  background: var(--purple-light);
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+  font-size: 0.95rem;
+  color: var(--placeholder);
+  margin-bottom: 16px;
+  text-align: left;
+
+  &:focus {
+    outline: none;
+    border-color: var(--purple-focus);
+    box-shadow: 0 0 0 3px var(--purple-focus-shadow);
+  }
+}
+
+.qrCode {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+  margin-top: 16px;
+  padding: 12px;
+  background: var(--white);
+}
+
+.copyButton {
+  width: 100%;
+  margin: 0 auto;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 5px;
+  background: var(--purple-btn);
+  color: var(--white);
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  &:hover {
+    background: var(--purple-btn-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px var(--purple-btn-shadow);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  svg {
+    opacity: 0.9;
+  }
+}
+
+@media (max-width: 768px) {
+  .popup {
+    padding: 32px 40px;
+    width: 92%;
+  }
+
+  .title {
+    font-size: 1.3rem;
+  }
+
+  .linkInput {
+    padding: 12px 14px;
+    font-size: 0.9rem;
+  }
+
+  .copyButton {
+    padding: 12px 16px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .popup {
+    padding: 28px 24px;
+    width: 94%;
+    border-radius: 12px;
+  }
+
+  .title {
+    font-size: 1.2rem;
+    margin-bottom: 16px;
+  }
+
+  .linkInput {
+    padding: 14px 16px;
+    font-size: 0.95rem;
+    border-radius: 10px;
+    min-height: 48px;
+  }
+
+  .copyButton {
+    padding: 14px 20px;
+    font-size: 1rem;
+    border-radius: 10px;
+    min-height: 48px;
+  }
+
+  .copyButton:active {
+    transform: scale(0.98);
+  }
+}

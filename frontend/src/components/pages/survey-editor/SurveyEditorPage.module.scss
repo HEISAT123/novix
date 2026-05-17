@@ -1,0 +1,972 @@
+.page {
+  padding: 10px 28px 100px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.card {
+  background: var(--page-bg);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.label {
+  font-size: 1.2rem;
+  color: var(--black);
+}
+
+.label_transperant{
+  color: var(--accent-light);
+}
+
+.input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  background: var(--input-bg);
+  resize: none;
+  min-height: 40px;
+  max-height: 280px;
+  overflow: hidden;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+  font-size: 0.95rem;
+
+}
+
+.input::placeholder {
+  font-size: 0.95rem;
+  color: var(--placeholder);
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif ;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-rgba-shadow-light);
+}
+
+.inputPreview {
+  opacity: 0.8;
+}
+
+.question {
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  background: var(--page-bg);
+}
+
+.questionHead {
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.questionTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.questionNumber {
+  color: var(--dark-text);
+  font-size: 1rem;
+  white-space: nowrap;
+  font-weight: 400;
+}
+
+.questionInput {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--accent-rgba);
+  background: transparent;
+  font-size: 1.1rem;
+  color: var(--dark-text);
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+  min-width: 0;
+  border-radius: 5px;
+  cursor: text;
+  transition: all 0.2s ease;
+}
+
+.questionInput::placeholder {
+  color: var(--accent-light);
+}
+
+.questionInput:hover {
+  background: var(--accent-rgba-hover);
+}
+
+.questionInput:focus {
+  outline: none;
+  border-color: var(--primary-border);
+  background: var(--accent-rgba-focus);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+
+.questionActions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.iconButton {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.iconButton:hover {
+  background: var(--accent-rgba-shadow);
+  color: var(--accent-hover);
+}
+
+.questionTypeSelect {
+  padding: 4px 32px 4px 20px;
+  border: 2px solid var(--border-color);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--muted);
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 400;
+  transition: all 0.2s ease;
+  min-width: 140px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%236B5DB3' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px 8px;
+}
+
+.questionTypeSelect:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-rgba-shadow-light);
+}
+
+.questionTypeSelect:hover {
+  border-color: var(--accent);
+}
+
+.questionTypeSelectWrapper {
+  position: relative;
+}
+
+.questionTypeMenu {
+  position: absolute;
+  background: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 140px;
+  z-index: 1000;
+  box-shadow: var(--shadow-lg);
+  animation: menuFadeIn 0.3s ease;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+}
+
+.questionTypeMenu button {
+  text-align: left;
+  border: 1px solid var(--border-color);
+  background: var(--white);
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--muted-text);
+  font-weight: 400;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+}
+
+.questionTypeMenu button:hover {
+  border-color: var(--accent);
+  background: var(--accent-rgba-focus);
+}
+
+.questionTypeMenu button.active {
+  border-color: var(--accent);
+  background: var(--accent-rgba-shadow);
+  color: var(--accent);
+}
+
+.textAnswerPreview {
+  margin-top: 8px;
+}
+
+.textInputPlaceholder {
+  width: 100%;
+  padding: 10px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--placeholder);
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+  font-size: 0.95rem;
+}
+
+.sectionTitle {
+  margin: 0 0 16px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--dark-text);
+}
+
+.optionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.optionRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 0;
+}
+
+.radioFake {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  flex-shrink: 0;
+  background: transparent;
+}
+
+.optionInput {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--accent-rgba);
+  background: transparent;
+  font-size: 1rem;
+  color: var(--dark-text);
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+  border-radius: 6px;
+  cursor: text;
+  transition: all 0.2s ease;
+}
+
+.optionInput::placeholder {
+  color: var(--placeholder);
+}
+
+.optionInput:hover {
+  background: var(--accent-rgba-hover);;
+}
+
+.optionInput:focus {
+  outline: none;
+  border-color: var(--primary-border);
+  background: var(--accent-rgba-focus);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+
+.removeOptionBtn {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--error);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.removeOptionBtn:hover {
+  background: var(--error-shadow);
+}
+
+.optionMenuBtn {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.optionMenuBtn:hover {
+  background: var(--accent-rgba-shadow);
+}
+
+.addOptionBtn {
+  margin-top: 12px;
+  padding: 4px 16px;
+  font-weight: 400;
+  cursor: pointer;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  color: var(--btn-muted);
+  background: transparent;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+  font-size: 0.95rem;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+}
+
+.addOptionBtn:hover {
+  border-color: var(--accent);
+  background: var(--accent-rgba-focus);
+}
+
+.addOptionBtn svg {
+  color: var(--accent);
+}
+
+.optionsCounter {
+  margin: 6px 0 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  margin-top: 20px;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: visible;
+  &_save {
+    display: flex;
+    gap: 10px;
+  }
+}
+
+.addQuestionWrapper {
+  position: relative;
+}
+
+.menu {
+  position: absolute;
+  background: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 100%;
+  z-index: 1000;
+  box-shadow: var(--shadow-lg);
+  animation: menuFadeIn 0.3s ease;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+}
+
+@keyframes menuFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.menu button {
+  text-align: left;
+  border: 1px solid var(--border-color);
+  background: var(--white);
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--muted-text);
+  font-weight: 400;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+}
+
+.menu button:hover {
+  border-color: var(--accent);
+  background: var(--accent-rgba-focus);
+}
+
+.primaryBtn,
+.outlineBtn,
+.ghostBtn {
+  font-weight: 400;
+  font-size: 0.9rem;
+  padding: 8px 30px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  &:hover {
+    box-shadow: 0 0 0 3px var(--primary-soft);
+    transform: translateY(-1px);
+  }
+}
+
+.primaryBtn {
+  border: none;
+  background: var(--primary);
+  color: var(--white);
+}
+
+.outlineBtn {
+  border: 2px solid var(--line);
+  background: var(--white);
+  color: var(--title-color);
+}
+
+.ghostBtn {
+  border: 2px solid var(--question-border);
+  color: var(--text);
+  background: var(--ghost-btn-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 4px 20px;
+}
+
+.plusIcon {
+  font-size: 25px;
+  color: var(--primary);
+  line-height: 1;
+  font-weight: 500;
+}
+
+.statusRow {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.statusToggle {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  overflow: hidden;
+  width: fit-content;
+}
+
+.statusOption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: none;
+  background: var(--white);
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+
+  &:not(:last-child) {
+    border-right: 1px solid var(--border-color);
+  }
+
+  &:hover:not(:disabled) {
+    background: var(--accent-rgba-focus);
+    color: var(--title-color);
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.7;
+  }
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.statusActive {
+  background: var(--primary);
+  color: var(--white);
+  font-weight: 500;
+
+  &:hover:not(:disabled) {
+    background: var(--primary);
+    color: var(--white);
+    opacity: 0.9;
+  }
+
+  &:disabled {
+    opacity: 1;
+  }
+
+  svg {
+    stroke: var(--white);
+  }
+}
+
+.helperLinks {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.helperLinks a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.helperLinks a:hover {
+  text-decoration: underline;
+}
+
+.error {
+  background: linear-gradient(135deg, var(--error-gradient-start) 0%, var(--error-gradient-end) 100%);
+  border: 1px solid var(--error-border-soft);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-top: 20px;
+  color: var(--error);
+  font-size: 0.95rem;
+  font-weight: 400;
+  box-shadow: var(--shadow-error);
+  animation: errorSlideIn 0.3s ease;
+}
+
+@keyframes errorSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 1200px) {
+  .page {
+    padding: 10px 20px 100px;
+  }
+}
+
+@media (max-width: 900px) {
+  .page {
+    padding: 10px 16px 80px;
+    max-width: 100%;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .label {
+    font-size: 1.1rem;
+  }
+
+  .question {
+    padding: 14px 16px;
+  }
+
+  .questionInput {
+    font-size: 1rem;
+  }
+
+  .questionTypeSelect {
+    min-width: 120px;
+    padding: 4px 28px 4px 16px;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions_save {
+    justify-content: stretch;
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 8px 12px 60px;
+  }
+
+  .card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .field {
+    margin-bottom: 14px;
+  }
+
+  .label {
+    font-size: 1rem;
+  }
+
+  .input {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+
+  .question {
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+
+  .questionHead {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .questionTitleRow {
+    width: 100%;
+  }
+
+  .questionActions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .questionInput {
+    font-size: 0.95rem;
+  }
+
+  .questionTypeSelect {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .iconButton {
+    width: 28px;
+    height: 28px;
+  }
+
+  .optionRow {
+    gap: 8px;
+  }
+
+  .optionInput {
+    font-size: 0.95rem;
+  }
+
+  .removeOptionBtn,
+  .optionMenuBtn {
+    width: 24px;
+    height: 24px;
+  }
+
+  .addOptionBtn {
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  .primaryBtn,
+  .outlineBtn,
+  .ghostBtn {
+    padding: 10px 20px;
+    font-size: 0.85rem;
+  }
+
+  .ghostBtn {
+    padding: 8px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 12px 12px 40px;
+  }
+
+  .card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .field {
+    margin-bottom: 16px;
+  }
+
+  .label {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .input {
+    padding: 12px 14px;
+    font-size: 0.95rem;
+    min-height: 44px;
+    border-radius: 10px;
+  }
+
+  .question {
+    padding: 14px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+  }
+
+  .question:active {
+    transform: scale(0.99);
+    transition: transform 0.1s ease;
+  }
+
+  .questionHead {
+    margin-bottom: 12px;
+  }
+
+  .questionNumber {
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  .questionInput {
+    font-size: 0.95rem;
+    padding: 8px 12px;
+    border-radius: 8px;
+  }
+
+  .questionTypeSelect {
+    font-size: 0.9rem;
+    padding: 8px 28px 8px 14px;
+    border-radius: 8px;
+    min-height: 40px;
+  }
+
+  .iconButton {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+  }
+
+  .iconButton:active {
+    transform: scale(0.95);
+  }
+
+  .radioFake {
+    width: 20px;
+    height: 20px;
+  }
+
+  .optionInput {
+    padding: 8px 12px;
+    font-size: 0.95rem;
+    border-radius: 8px;
+  }
+
+  .removeOptionBtn,
+  .optionMenuBtn {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+  }
+
+  .removeOptionBtn:active,
+  .optionMenuBtn:active {
+    transform: scale(0.95);
+  }
+
+  .addOptionBtn {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    min-height: 40px;
+  }
+
+  .addOptionBtn:active {
+    transform: scale(0.98);
+  }
+
+  .optionsCounter {
+    font-size: 0.8rem;
+  }
+
+  .actions {
+    margin-top: 24px;
+    gap: 12px;
+  }
+
+  .primaryBtn,
+  .outlineBtn,
+  .ghostBtn {
+    padding: 12px 20px;
+    font-size: 0.95rem;
+    border-radius: 10px;
+    min-height: 44px;
+  }
+
+  .primaryBtn:active,
+  .outlineBtn:active,
+  .ghostBtn:active {
+    transform: scale(0.98);
+  }
+
+  .ghostBtn {
+    padding: 10px 18px;
+  }
+
+  .plusIcon {
+    font-size: 24px;
+  }
+
+  .helperLinks {
+    font-size: 0.9rem;
+  }
+
+  .statusToggle {
+    width: 100%;
+  }
+
+  .statusOption {
+    flex: 1;
+    justify-content: center;
+    padding: 10px 14px;
+    font-size: 0.85rem;
+  }
+
+  .error {
+    padding: 14px 16px;
+    font-size: 0.9rem;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 360px) {
+  .page {
+    padding: 10px 10px 36px;
+  }
+
+  .card {
+    padding: 14px;
+    border-radius: 10px;
+  }
+
+  .field {
+    margin-bottom: 14px;
+  }
+
+  .label {
+    font-size: 0.95rem;
+  }
+
+  .input {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    min-height: 42px;
+  }
+
+  .question {
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+  }
+
+  .questionHead {
+    margin-bottom: 10px;
+  }
+
+  .questionNumber {
+    font-size: 0.9rem;
+  }
+
+  .questionInput {
+    font-size: 0.9rem;
+    padding: 6px 10px;
+  }
+
+  .questionTypeSelect {
+    font-size: 0.85rem;
+    padding: 6px 24px 6px 12px;
+    min-height: 36px;
+  }
+
+  .iconButton {
+    width: 32px;
+    height: 32px;
+  }
+
+  .radioFake {
+    width: 18px;
+    height: 18px;
+  }
+
+  .optionInput {
+    padding: 6px 10px;
+    font-size: 0.9rem;
+  }
+
+  .removeOptionBtn,
+  .optionMenuBtn {
+    width: 28px;
+    height: 28px;
+  }
+
+  .addOptionBtn {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    min-height: 36px;
+  }
+
+  .primaryBtn,
+  .outlineBtn,
+  .ghostBtn {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    min-height: 42px;
+  }
+
+  .ghostBtn {
+    padding: 8px 14px;
+  }
+
+  .plusIcon {
+    font-size: 22px;
+  }
+
+  .sectionTitle {
+    font-size: 1.1rem;
+  }
+}
