@@ -246,6 +246,7 @@ export default function SurveyEditorPage() {
             className={styles.input}
             placeholder="Введите название опроса"
             value={survey.title}
+            maxLength={255}
             onChange={(e) => setSurvey((s) => (s ? { ...s, title: e.target.value } : s))}
           />
         </label>

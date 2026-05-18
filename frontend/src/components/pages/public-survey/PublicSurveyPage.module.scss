@@ -236,7 +236,7 @@
 
 .card {
   width: 100%;
-  max-width: 560px;
+  max-width: 610px;
   background: var(--card-bg);
   border: 1px solid var(--line);
   border-radius: 16px;
@@ -246,6 +246,9 @@
 
 .title {
   margin: 0 0 8px;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .desc {
@@ -267,6 +270,9 @@
 .qText {
   margin: 0 0 8px;
   font-weight: 500;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .radioLabel {
@@ -296,7 +302,7 @@
 .radioText {
   flex: 1;
   min-width: 0;
-  word-break: break-all;
+  word-wrap: break-word;
   overflow-wrap: anywhere;
   white-space: normal;
 }

@@ -92,6 +92,9 @@
   font-size: 1rem;
   color: var(--title-color);
   font-weight: 450;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .surveyCardMeta {

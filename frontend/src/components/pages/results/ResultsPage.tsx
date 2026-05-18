@@ -114,7 +114,11 @@ export default function ResultsPage() {
 
 function SingleStats({ question, responses, total }: { question: QuestionSingle; responses: ApiResponse[]; total: number }) {
   const opts = question.options.map((o) => o.text.trim()).filter(Boolean)
-  const denom = total || 1
+
+  // Считаем количество ответов именно на этот вопрос
+  const answeredCount = responses.filter((r) => r.answers[question.id] !== undefined && r.answers[question.id] !== '').length
+  const denom = answeredCount || 1
+
   return (
     <ul className={styles.barList}>
       {opts.map((opt, i) => {
@@ -128,7 +132,7 @@ function SingleStats({ question, responses, total }: { question: QuestionSingle;
             <div className={styles.barTrack}>
               <div className={styles.barFill} style={{ width: `${pct}%`, background: BAR_COLORS[i % BAR_COLORS.length] }} />
             </div>
-            <span className={styles.percentage}>{pct}%</span>
+            <span className={styles.percentage}>{pct}% ({c} {pluralize(c, ['ответ', 'ответа', 'ответов'])})</span>
           </li>
         )
       })}
