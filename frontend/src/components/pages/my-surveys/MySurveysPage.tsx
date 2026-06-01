@@ -6,6 +6,7 @@ import activeSurveysIcon from '../../../assets/activeSurveys.svg'
 import totalResponsesIcon from '../../../assets/totalResponses.svg'
 import { useAuth } from '../../../context/useAuth'
 import { useSurveyContext } from '../../../hooks/useSurveyContext'
+import { copyTextToClipboard } from '../../../lib/clipboard'
 import styles from './MySurveysPage.module.scss'
 import DeleteSurveyPopup from '../../popup/delete-survey-popup/DeleteSurveyPopup'
 
@@ -61,37 +62,12 @@ export default function MySurveysPage() {
   }
 
   const handleCopyLink = async (publicId: string | null) => {
-    if (!publicId) {
-      console.error('publicId is null or undefined')
-      return
-    }
-    try {
-      const link = `${window.location.origin}/survey/${publicId}`
-      
-      // Пробуем современный API
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(link)
-      } else {
-        // Fallback для старых браузеров или HTTP
-        const textarea = document.createElement('textarea')
-        textarea.value = link
-        textarea.style.position = 'fixed'
-        textarea.style.opacity = '0'
-        document.body.appendChild(textarea)
-        textarea.select()
-        try {
-          document.execCommand('copy')
-        } catch (err) {
-          console.error('Failed to copy link:', err)
-          return
-        }
-        document.body.removeChild(textarea)
-      }
-      
+    if (!publicId) return
+    const link = `${window.location.origin}/survey/${publicId}`
+    const ok = await copyTextToClipboard(link)
+    if (ok) {
       setCopiedId(publicId)
       setTimeout(() => setCopiedId(null), 2000)
-    } catch (err) {
-      console.error('Failed to copy link:', err)
     }
   }
 

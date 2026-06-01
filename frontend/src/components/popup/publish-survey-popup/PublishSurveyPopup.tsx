@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
+import { copyTextToClipboard } from '../../../lib/clipboard'
 import styles from './PublishSurveyPopup.module.scss'
 
 interface PublishSurveyPopupProps {
@@ -18,9 +19,14 @@ const PublishSurveyPopup: React.FC<PublishSurveyPopupProps> = ({
   surveyLink,
   onClose,
 }) => {
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(surveyLink)
-    onClose()
+  const [copied, setCopied] = useState(false)
+
+  const handleCopyLink = async () => {
+    const ok = await copyTextToClipboard(surveyLink)
+    if (ok) {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }
   }
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -31,17 +37,18 @@ const PublishSurveyPopup: React.FC<PublishSurveyPopupProps> = ({
 
   return (
     <div className={styles.overlay} onClick={handleOverlayClick}>
-      <div className={styles.popup}>
+      <div className={styles.popup} onClick={(e) => e.stopPropagation()}>
         <h2 className={styles.title}>Ваша ссылка:</h2>
         <input
           type="text"
           value={surveyLink}
           readOnly
           className={styles.linkInput}
+          onFocus={(e) => e.currentTarget.select()}
         />
-        <button onClick={handleCopyLink} className={styles.copyButton}>
+        <button type="button" onClick={handleCopyLink} className={styles.copyButton}>
           <CopyIcon />
-          <span>Скопировать ссылку</span>
+          <span>{copied ? 'Скопировано!' : 'Скопировать ссылку'}</span>
         </button>
         <div className={styles.qrCode}>
           <QRCodeSVG value={surveyLink} size={160} />
