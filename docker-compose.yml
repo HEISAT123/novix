@@ -52,17 +52,21 @@ services:
       - backend
     networks:
       - novix
+
   nginx:
     image: nginx:stable-alpine
     ports:
-    - "80:80"
+      - "80:80"
+      - "443:443"
     volumes:
-      - './nginx.conf:/etc/nginx/nginx.conf'
+      - './nginx.conf:/etc/nginx/nginx.conf:ro'
+      - './ssl:/etc/nginx/ssl:ro'
     depends_on:
-    - backend
-    - frontend
+      - backend
+      - frontend
     networks:
-    - novix
+      - novix
+    restart: unless-stopped
 
 volumes:
   postgres_data:
