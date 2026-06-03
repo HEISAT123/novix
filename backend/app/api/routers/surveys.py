@@ -87,7 +87,7 @@ async def create_survey(
     try:
         author_uuid = validate_uuid(user_id)
         new_survey = Survey(
-            public_id=uuid_module.uuid4().hex[:10],
+            public_id=uuid_module.uuid4().hex[:32],
             author_id=author_uuid,
             title=survey_data.title,
             description=survey_data.description,
