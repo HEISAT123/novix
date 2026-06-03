@@ -51,7 +51,7 @@ async def register(user_data: UserRegister, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(User).where(User.email == user_data.email))
     existing_user = result.scalar_one_or_none()
     if existing_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
+        raise HTTPException(status_code=400, detail="Этот Email уже зарегистрирован")
     
     # Создание пользователя
     try:
@@ -66,10 +66,10 @@ async def register(user_data: UserRegister, db: AsyncSession = Depends(get_db)):
         await db.refresh(new_user)
     except IntegrityError as e:
         await db.rollback()
-        raise HTTPException(status_code=400, detail="Database constraint violation")
+        raise HTTPException(status_code=400, detail="Нарушение ограничений базы данных")
     except SQLAlchemyError as e:
         await db.rollback()
-        raise HTTPException(status_code=500, detail="Internal server error")
+        raise HTTPException(status_code=500, detail="Внутренняя ошибка сервера")
     
     # Создание токена с правильным sub (user_id)
     token = create_access_token(data={"sub": str(new_user.id)})
@@ -86,11 +86,11 @@ async def login(user_data: UserLogin, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(User).where(User.email == user_data.email))
     user = result.scalar_one_or_none()
     if not user:
-        raise HTTPException(status_code=401, detail="Invalid email or password")
+        raise HTTPException(status_code=401, detail="Неверный Email или пароль")
     
     # Проверка пароля
     if not verify_password(user_data.password, user.hashed_password):
-        raise HTTPException(status_code=401, detail="Invalid email or password")
+        raise HTTPException(status_code=401, detail="Неверный Email или пароль")
     
     # Создание токена с правильным sub (user_id)
     token = create_access_token(data={"sub": str(user.id)})

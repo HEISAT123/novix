@@ -1,7 +1,7 @@
 import { type FormEvent, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../context/useAuth'
-import { validateEmail, validatePassword, validateLoginForm, type ValidationError } from '../../../lib/validation'
+import { validateEmail, validateLoginForm, type ValidationError } from '../../../lib/validation'
 import styles from './LoginPage.module.scss'
 
 export default function LoginPage() {
@@ -66,15 +66,17 @@ export default function LoginPage() {
       return
     }
 
-    let error: ValidationError | null = null
-    if (fieldName === 'email') error = validateEmail(value)
-    else if (fieldName === 'password') error = validatePassword(value)
-
-    if (error) {
-      setErrors((prev) => ({ ...prev, [fieldName]: error.message }))
-    } else {
-      clearFieldError(fieldName)
+    if (fieldName === 'email') {
+      const error = validateEmail(value)
+      if (error) {
+        setErrors((prev) => ({ ...prev, [fieldName]: error.message }))
+      } else {
+        clearFieldError(fieldName)
+      }
+      return
     }
+
+    clearFieldError(fieldName)
   }
 
   return (
