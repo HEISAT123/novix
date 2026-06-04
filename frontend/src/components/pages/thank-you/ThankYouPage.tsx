@@ -1,4 +1,9 @@
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import { convertApiSurveyToSurvey, getPublicSurvey } from '../../../api/surveysApi'
+import { surveyTitleOnly } from '../../../lib/documentTitle'
+import { useDocumentTitle } from '../../../hooks/useDocumentTitle'
+import type { Survey } from '../../../types/survey'
 import styles from './ThankYouPage.module.scss'
 
 const CheckIcon = () => (
@@ -8,6 +13,26 @@ const CheckIcon = () => (
 )
 
 export default function ThankYouPage() {
+  const { id } = useParams<{ id: string }>()
+  const [survey, setSurvey] = useState<Survey | null>(null)
+
+  useDocumentTitle(survey ? surveyTitleOnly(survey.title) : 'Опрос')
+
+  useEffect(() => {
+    const loadSurvey = async () => {
+      if (!id) return
+
+      try {
+        const apiSurvey = await getPublicSurvey(id)
+        setSurvey(convertApiSurveyToSurvey(apiSurvey))
+      } catch (error) {
+        console.error('Failed to load survey for thank-you page:', error)
+        setSurvey(null)
+      }
+    }
+    loadSurvey()
+  }, [id])
+
   return (
     <div className={styles.wrap}>
       <div className={styles.inner}>

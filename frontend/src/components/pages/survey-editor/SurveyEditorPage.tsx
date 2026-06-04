@@ -4,6 +4,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useSurveyContext } from '../../../hooks/useSurveyContext'
 import { createEmptyQuestion, createEmptySurvey } from '../../../hooks/useSurveys'
 import type { Question, QuestionOption, Survey } from '../../../types/survey'
+import { surveyTitleOnly, withBrand } from '../../../lib/documentTitle'
+import { useDocumentTitle } from '../../../hooks/useDocumentTitle'
 import { validateSurveyTitle, validateSurveyDescription, validateQuestionText, validateOptionText } from '../../../lib/validation'
 import styles from './SurveyEditorPage.module.scss'
 import PublishSurveyPopup from '../../popup/publish-survey-popup/PublishSurveyPopup'
@@ -93,6 +95,12 @@ export default function SurveyEditorPage() {
   const [isSaving, setIsSaving] = useState(false)
   const [survey, setSurvey] = useState<Survey | null>(null)
   const [savedSurveyId, setSavedSurveyId] = useState<string | null>(null)
+
+  useDocumentTitle(
+    id === 'new'
+      ? withBrand('Создание опроса')
+      : withBrand(surveyTitleOnly(survey?.title, 'Без названия')),
+  )
 
   useEffect(() => {
     const loadSurvey = async () => {

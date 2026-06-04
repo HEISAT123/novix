@@ -2,6 +2,8 @@ import { type FormEvent, useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { getPublicSurvey, submitPublicResponse } from '../../../api/surveysApi'
 import { convertApiSurveyToSurvey } from '../../../api/surveysApi'
+import { surveyTitleOnly } from '../../../lib/documentTitle'
+import { useDocumentTitle } from '../../../hooks/useDocumentTitle'
 import { validateAnswer, validateSurveyForm, type ValidationError } from '../../../lib/validation'
 import { appendResponse } from '../../../lib/surveysStorage'
 import type { AnswersMap, Survey } from '../../../types/survey'
@@ -15,6 +17,8 @@ export default function PublicSurveyPage() {
   const [isSurveyLoading, setIsSurveyLoading] = useState(true)
   const [answers, setAnswers] = useState<AnswersMap>({})
   const [errors, setErrors] = useState<Record<string, string>>({})
+
+  useDocumentTitle(survey ? surveyTitleOnly(survey.title) : 'Опрос')
 
   useEffect(() => {
     const loadSurvey = async () => {

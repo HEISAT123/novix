@@ -7,6 +7,8 @@ import totalResponsesIcon from '../../../assets/totalResponses.svg'
 import { useAuth } from '../../../context/useAuth'
 import { useSurveyContext } from '../../../hooks/useSurveyContext'
 import { copyTextToClipboard } from '../../../lib/clipboard'
+import { withBrand } from '../../../lib/documentTitle'
+import { useDocumentTitle } from '../../../hooks/useDocumentTitle'
 import styles from './MySurveysPage.module.scss'
 import DeleteSurveyPopup from '../../popup/delete-survey-popup/DeleteSurveyPopup'
 
@@ -22,6 +24,7 @@ function StatCard({ icon, label }: { icon: ReactNode; label: string }) {
 }
 
 export default function MySurveysPage() {
+  useDocumentTitle(withBrand('Мои опросы'))
   const navigate = useNavigate()
   const { surveys, stats, deleteSurvey, isLoading } = useSurveyContext()
   const { user } = useAuth()

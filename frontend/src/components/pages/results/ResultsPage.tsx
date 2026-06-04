@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { surveyWithSuffix, withBrand } from '../../../lib/documentTitle'
+import { useDocumentTitle } from '../../../hooks/useDocumentTitle'
 import { useSurveyContext } from '../../../hooks/useSurveyContext'
 import type { AnswersMap, QuestionSingle, Survey } from '../../../types/survey'
 import type { ResponseItem } from '../../../api/surveysApi'
@@ -29,6 +31,14 @@ export default function ResultsPage() {
   const [survey, setSurvey] = useState<Survey | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [responses, setResponses] = useState<ApiResponse[]>([])
+
+  useDocumentTitle(
+    survey
+      ? surveyWithSuffix(survey.title, 'Результаты')
+      : isLoading
+        ? withBrand('Загрузка…')
+        : withBrand('Опрос не найден'),
+  )
 
   useEffect(() => {
     const loadSurvey = async () => {
@@ -74,7 +84,9 @@ export default function ResultsPage() {
             }
           }
           
-          if (response.answer !== null) {
+          if (response.selected_option_id) {
+            groupedBySession[sessionId].answers[response.question_id] = response.selected_option_id
+          } else if (response.answer !== null) {
             groupedBySession[sessionId].answers[response.question_id] = response.answer
           }
         }
@@ -112,8 +124,8 @@ export default function ResultsPage() {
   )
 }
 
-function SingleStats({ question, responses, total }: { question: QuestionSingle; responses: ApiResponse[]; total: number }) {
-  const opts = question.options.map((o) => o.text.trim()).filter(Boolean)
+function SingleStats({ question, responses }: { question: QuestionSingle; responses: ApiResponse[]; total: number }) {
+  const opts = question.options.filter((o) => o.text.trim())
 
   // Считаем количество ответов именно на этот вопрос
   const answeredCount = responses.filter((r) => r.answers[question.id] !== undefined && r.answers[question.id] !== '').length
@@ -122,11 +134,11 @@ function SingleStats({ question, responses, total }: { question: QuestionSingle;
   return (
     <ul className={styles.barList}>
       {opts.map((opt, i) => {
-        const c = responses.filter((r) => r.answers[question.id] === opt).length
+        const c = responses.filter((r) => r.answers[question.id] === opt.id).length
         const pct = Math.round((c / denom) * 100)
-        const displayOpt = opt.length > 100 ? opt.slice(0, 100) + '...' : opt
+        const displayOpt = opt.text.trim().length > 100 ? opt.text.trim().slice(0, 100) + '...' : opt.text.trim()
         return (
-          <li key={opt} className={styles.barRow}>
+          <li key={opt.id} className={styles.barRow}>
             <span className={styles.radioIcon} aria-hidden />
             <span className={styles.optionText}>{displayOpt}</span>
             <div className={styles.barTrack}>

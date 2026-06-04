@@ -43,6 +43,7 @@ export interface ResponseItem {
   question_id: string
   respondent_session_id: string
   answer: string | null
+  selected_option_id?: string | null
   created_at: string | null
 }
 

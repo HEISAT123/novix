@@ -1,10 +1,13 @@
 import { type FormEvent, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../context/useAuth'
+import { withBrand } from '../../../lib/documentTitle'
 import { validateEmail, validatePassword, validateUsername, validateConfirmPassword, validateRegistrationForm, type ValidationError } from '../../../lib/validation'
+import { useDocumentTitle } from '../../../hooks/useDocumentTitle'
 import styles from './RegisterPage.module.scss'
 
 export default function RegisterPage() {
+  useDocumentTitle(withBrand('Регистрация'))
   const navigate = useNavigate()
   const { register } = useAuth()
   const [username, setUsername] = useState('')

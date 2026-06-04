@@ -525,6 +525,7 @@ async def get_survey_responses(
                 "question_id": str(answer.question_id),
                 "respondent_session_id": str(answer.respondent_session_id),
                 "answer": answer_text,
+                "selected_option_id": str(answer.selected_option_id) if answer.selected_option_id else None,
                 "created_at": answer.created_at.isoformat() if answer.created_at else None
             })
 
