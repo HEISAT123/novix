@@ -27,7 +27,6 @@ export async function register(data: RegisterRequest): Promise<AuthResponse> {
 }
 
 export async function login(data: LoginRequest): Promise<AuthResponse> {
-  console.log('Login request data:', data)
   const response = await post<AuthResponse>('/auth/login', data)
   localStorage.setItem('token', response.access_token)
   localStorage.setItem('user_id', response.user_id)

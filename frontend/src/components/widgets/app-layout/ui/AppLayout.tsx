@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../../context/useAuth'
 import mainIcon from '../../../../assets/mainIcon.svg'
-import profileIcon from '../../../../assets/profileIcon.png'
+import profileIcon from '../../../../assets/profileIcon.svg'
 import styles from './AppLayout.module.scss'
 
 function getHeaderMeta(pathname: string): { title: string; showBack: boolean } {

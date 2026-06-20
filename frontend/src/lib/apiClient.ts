@@ -1,4 +1,6 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+// Используем относительный путь /api/ для запросов внутри Docker
+// nginx проксирует эти запросы на backend:8000
+const API_BASE_URL = '/api';
 
 export class ApiError extends Error {
   constructor(
@@ -23,12 +25,6 @@ async function handleResponse(response: Response): Promise<unknown> {
                 (errorData as { detail?: string; message?: string; error?: string }).message ||
                 (errorData as { detail?: string; message?: string; error?: string }).error ||
                 message
-
-      console.error('API Error:', {
-        status: response.status,
-        statusText: response.statusText,
-        errorData
-      })
     } catch {
       console.error('API Error:', {
         status: response.status,

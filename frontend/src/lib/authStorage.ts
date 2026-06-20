@@ -3,6 +3,15 @@ import type { User } from '../types/user'
 const USERS_KEY = 'oprosi_users_v1'
 const SESSION_KEY = 'oprosi_session_v1'
 
+// Функция для генерации UUID (альтернатива crypto.randomUUID для старых браузеров)
+function generateUUID(): string {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0
+    const v = c === 'x' ? r : (r & 0x3) | 0x8
+    return v.toString(16)
+  })
+}
+
 function readJson<T>(key: string, fallback: T): T {
   try {
     const raw = localStorage.getItem(key)
@@ -13,6 +22,11 @@ function readJson<T>(key: string, fallback: T): T {
   }
 }
 
+/**
+ * Примечание: Хеширование на клиенте НЕ заменяет серверную аутентификацию.
+ * Эта функция оставлена только для локальной разработки без бэкенда.
+ * В production используйте только API вызовы к серверу.
+ */
 async function hashPassword(password: string): Promise<string> {
   const encoder = new TextEncoder()
   const data = encoder.encode(password)
@@ -51,7 +65,7 @@ export async function registerUser(email: string, password: string, username: st
   
   const hashedPassword = await hashPassword(password)
   const user: User = {
-    id: crypto.randomUUID(),
+    id: generateUUID(),
     email: email.toLowerCase(),
     password: hashedPassword,
     username: username.trim(),

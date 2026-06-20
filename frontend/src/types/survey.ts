@@ -1,10 +1,15 @@
 export type SurveyStatus = 'draft' | 'published'
 
+export type QuestionOption = {
+  id: string
+  text: string
+}
+
 export type QuestionSingle = {
   id: string
   type: 'single'
   text: string
-  options: string[]
+  options: QuestionOption[]
 }
 
 export type QuestionText = {
@@ -32,4 +37,5 @@ export type SurveyResponseRow = {
   answers: Record<string, string>
 }
 
+// AnswersMap: для single_choice отправляем option.id, для text - строку
 export type AnswersMap = Record<string, string>

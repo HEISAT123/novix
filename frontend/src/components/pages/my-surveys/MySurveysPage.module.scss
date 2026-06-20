@@ -1,0 +1,522 @@
+.page {
+  padding: 30px 50px 50px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.statsRow {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.statCard {
+  background: var(--surface);
+  min-width: 200px;
+  flex: 1;
+  max-width: 300px;
+  height: 80px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.statCardIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--primary-soft);
+  display: grid;
+  place-items: center;
+}
+
+.statCardIconImage {
+  display: block;
+  object-fit: contain;
+}
+
+.statCardLabel {
+  margin: 0;
+  color: var(--title-color);
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.surveyGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+  margin-bottom: 34px;
+  width: 100%;
+}
+
+.surveyCard {
+  background: var(--page-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 5px;
+  width: 100%;
+  padding: 18px 18px;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.15s, box-shadow 0.15s;
+  cursor: pointer;
+}
+
+.surveyCard:hover {
+  border-color: var(--primary-border);
+  box-shadow: var(--shadow-md);
+}
+
+.surveyCardHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.surveyCardActions {
+  display: flex;
+  gap: 8px;
+}
+
+.surveyCardTitle {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  color: var(--title-color);
+  font-weight: 450;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.surveyCardMeta {
+  margin: 12px 0 0;
+  font-size: 0.9rem;
+  font-family: var(--title-font-family);
+  color: var(--muted);
+}
+
+.deleteBtn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: border-color 0.15s, color 0.15s, background-color 0.15s;
+}
+
+.deleteBtn:hover {
+  border-color: var(--delete-btn-border);
+  background: var(--white);
+}
+
+.shareBtn,
+.qrBtn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s, color 0.15s, background-color 0.15s;
+}
+
+.shareBtn:hover,
+.qrBtn:hover {
+  border-color: var(--delete-btn-border);
+  background: var(--white);
+  color: var(--title-color);
+}
+
+.shareBtnCopied {
+  color: var(--success-text) !important;
+  border-color: var(--success) !important;
+  background: var(--success) !important;
+
+  svg {
+    stroke: var(--white) !important;
+  }
+}
+
+.qrOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.qrPopup {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 32px 40px;
+  width: 90%;
+  max-width: 360px;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+
+  h3 {
+    margin: 0 0 20px;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--title-color);
+  }
+}
+
+.qrCode {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.qrLink {
+  font-size: 0.8rem;
+  color: var(--muted);
+  word-break: break-all;
+  margin-bottom: 20px;
+}
+
+.closeQrBtn {
+  width: 100%;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  background: var(--primary);
+  color: var(--white);
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+.badgeOk,
+.badgeMuted {
+  display: inline-block;
+  padding: 4px 15px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+}
+
+.badgeOk {
+  background: var(--success);
+  color: var(--success-text);
+}
+
+.badgeMuted {
+  background: var(--surface-2);
+  color: var(--muted);
+}
+
+.pageFooterCta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 10px;
+  gap: 12px;
+}
+
+.primaryBtn {
+  font-weight: 600;
+  padding: 13px 22px;
+  border-radius: 4px;
+  text-decoration: none;
+  background: var(--primary);
+  &:hover {
+    border-color: var(--primary-border);
+    box-shadow: var(--shadow-md);
+  }
+  color: var(--white);
+  min-width: min(100%, 320px);
+  text-align: center;
+}
+
+.emptyHint {
+  color: var(--empty-hint);
+}
+
+.authMessage {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+@media (max-width: 1200px) {
+  .page {
+    padding: 30px 40px 50px;
+  }
+
+  .surveyGrid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 18px;
+  }
+}
+
+@media (max-width: 900px) {
+  .page {
+    padding: 24px 20px 40px;
+  }
+
+  .statsRow {
+    gap: 12px;
+  }
+
+  .statCard {
+    min-width: 150px;
+    max-width: 100%;
+    height: 70px;
+    padding: 14px 16px;
+  }
+
+  .statCardIcon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .statCardLabel {
+    font-size: 0.85rem;
+  }
+
+  .surveyGrid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+
+  .surveyCard {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 20px 16px 36px;
+  }
+
+  .statsRow {
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .statCard {
+    min-width: 140px;
+    height: 68px;
+    padding: 12px 14px;
+  }
+
+  .statCardIcon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .statCardLabel {
+    font-size: 0.8rem;
+  }
+
+  .surveyGrid {
+    gap: 14px;
+  }
+
+  .surveyCard {
+    padding: 16px;
+  }
+
+  .surveyCardTitle {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 16px 12px 36px;
+  }
+
+  .statsRow {
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .statCard {
+    min-width: 120px;
+    height: 64px;
+    padding: 10px 12px;
+    border-radius: 12px;
+  }
+
+  .statCardIcon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+  }
+
+  .statCardLabel {
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .surveyGrid {
+    gap: 12px;
+  }
+
+  .surveyCard {
+    padding: 14px;
+  }
+
+  .surveyCard:active {
+    transform: scale(0.98);
+  }
+
+  .surveyCardHead {
+    gap: 8px;
+  }
+
+  .surveyCardTitle {
+    font-size: 1rem;
+    margin-bottom: 6px;
+  }
+
+  .surveyCardMeta {
+    font-size: 0.8rem;
+  }
+
+  .deleteBtn {
+    width: 32px;
+    height: 32px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+  }
+
+  .deleteBtn:active {
+    transform: scale(0.95);
+  }
+
+  .shareBtn,
+  .qrBtn {
+    width: 32px;
+    height: 32px;
+    font-size: 0.95rem;
+    border-radius: 8px;
+  }
+
+  .shareBtn:active,
+  .qrBtn:active {
+    transform: scale(0.95);
+  }
+
+  .badgeOk,
+  .badgeMuted {
+    padding: 5px 10px;
+    font-size: 0.75rem;
+    border-radius: 12px;
+  }
+
+  .pageFooterCta {
+    padding-top: 16px;
+    gap: 10px;
+  }
+
+  .primaryBtn {
+    padding: 14px 20px;
+    font-size: 1rem;
+    border-radius: 12px;
+    min-width: 100%;
+  }
+
+  .primaryBtn:active {
+    transform: scale(0.98);
+  }
+
+  .authMessage {
+    font-size: 0.85rem;
+    padding: 8px 12px;
+  }
+
+  .emptyHint {
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 24px 16px;
+  }
+}
+
+@media (max-width: 360px) {
+  .page {
+    padding: 12px 10px 32px;
+  }
+
+  .statsRow {
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .statCard {
+    min-width: 100px;
+    height: 60px;
+    padding: 8px 10px;
+    border-radius: 10px;
+  }
+
+  .statCardIcon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+  }
+
+  .statCardLabel {
+    font-size: 0.7rem;
+  }
+
+  .surveyGrid {
+    gap: 10px;
+  }
+
+  .surveyCard {
+    padding: 12px;
+  }
+
+  .surveyCardTitle {
+    font-size: 0.95rem;
+  }
+
+  .surveyCardMeta {
+    font-size: 0.75rem;
+  }
+
+  .deleteBtn,
+  .shareBtn,
+  .qrBtn {
+    width: 28px;
+    height: 28px;
+  }
+
+  .primaryBtn {
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    min-width: 100%;
+  }
+}

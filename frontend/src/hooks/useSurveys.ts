@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import type { AnswersMap, Question, QuestionSingle, QuestionText, Survey } from '../types/survey'
+import type { AnswersMap, Question, QuestionSingle, QuestionText, QuestionOption, Survey } from '../types/survey'
 import {
   loadAllResponses,
 } from '../lib/surveysStorage'
@@ -19,6 +19,15 @@ import {
   updateSurvey as apiUpdateSurvey,
   type ResponseItem,
 } from '../api/surveysApi'
+
+// Функция для генерации UUID (альтернатива crypto.randomUUID для старых браузеров)
+function generateUUID(): string {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0
+    const v = c === 'x' ? r : (r & 0x3) | 0x8
+    return v.toString(16)
+  })
+}
 
 export type UseSurveysApi = {
   surveys: Survey[]
@@ -45,13 +54,16 @@ export type UseSurveysApi = {
 export function createEmptyQuestion(type: 'single'): QuestionSingle
 export function createEmptyQuestion(type: 'text'): QuestionText
 export function createEmptyQuestion(type: 'single' | 'text'): Question {
-  const id = crypto.randomUUID()
+  const id = generateUUID()
   if (type === 'single') {
     return {
       id,
       type: 'single',
       text: '',
-      options: ['', ''],
+      options: [
+        { id: generateUUID(), text: '' },
+        { id: generateUUID(), text: '' },
+      ],
     }
   }
   return { id, type: 'text', text: '' }
@@ -59,7 +71,7 @@ export function createEmptyQuestion(type: 'single' | 'text'): Question {
 
 export function createEmptySurvey(): Survey {
   return {
-    id: crypto.randomUUID(),
+    id: generateUUID(),
     public_id: null,
     title: '',
     description: '',
@@ -74,6 +86,10 @@ export function useSurveys(): UseSurveysApi {
   const [isLoading, setIsLoading] = useState(true)
 
   const getSurveyById = useCallback(async (id: string): Promise<Survey | null> => {
+    // Для 'new' возвращаем null — это сигнал создать новый опрос
+    if (id === 'new') {
+      return null
+    }
     try {
       const apiSurvey = await apiGetSurvey(id)
       return convertApiSurveyToSurvey(apiSurvey)
@@ -87,8 +103,7 @@ export function useSurveys(): UseSurveysApi {
     try {
       setIsLoading(true)
       const apiSurveys = await apiGetSurveys()
-      console.log('API surveys from server:', apiSurveys)
-      
+
       // Загружаем количество ответов для каждого опроса
       const surveysWithCounts = await Promise.all(
         apiSurveys.map(async (s) => {
@@ -109,7 +124,7 @@ export function useSurveys(): UseSurveysApi {
           }
         })
       )
-      
+
       const convertedSurveys = surveysWithCounts.map(s => ({
         id: s.id,
         public_id: s.public_id,
@@ -119,7 +134,6 @@ export function useSurveys(): UseSurveysApi {
         questions: [],
         response_count: s.response_count
       }))
-      console.log('Converted surveys:', convertedSurveys)
       setSurveys(convertedSurveys)
     } catch (error) {
       console.error('Failed to load surveys:', error)
@@ -169,9 +183,7 @@ export function useSurveys(): UseSurveysApi {
   // ИСПРАВЛЕННАЯ ФУНКЦИЯ - без вызова refresh()
   const publishSurvey = useCallback(async (surveyId: string): Promise<string> => {
     try {
-      console.log('🔵 publishSurvey called with ID:', surveyId);
       const result = await apiPublishSurvey(surveyId)
-      console.log('✅ publishSurvey completed');
       // Обновляем список опросов, чтобы получить актуальный public_id
       await refresh()
       return result.public_url
@@ -202,7 +214,9 @@ export function useSurveys(): UseSurveysApi {
 
   const addQuestion = useCallback(async (surveyId: string, question: Question) => {
     try {
-      const options = question.type === 'single' ? question.options : undefined
+      const options = question.type === 'single' 
+        ? question.options.map(opt => opt.text) 
+        : undefined
       await apiAddQuestion(surveyId, {
         text: question.text,
         type: question.type === 'single' ? 'single_choice' : 'text',
@@ -216,7 +230,9 @@ export function useSurveys(): UseSurveysApi {
 
   const updateQuestion = useCallback(async (surveyId: string, questionId: string, question: Question) => {
     try {
-      const options = question.type === 'single' ? question.options : undefined
+      const options = question.type === 'single' 
+        ? question.options.map(opt => opt.text) 
+        : undefined
       await apiUpdateQuestion(surveyId, questionId, {
         text: question.text,
         type: question.type === 'single' ? 'single_choice' : 'text',
@@ -258,18 +274,13 @@ export function useSurveys(): UseSurveysApi {
   const stats = useMemo(() => {
     const published = surveys.filter((s) => s.status === 'published').length
     const all = loadAllResponses()
-    console.log('All responses from localStorage:', all)
-    console.log('Surveys:', surveys)
-    
+
     let totalResponses = 0
     for (const s of surveys) {
       const surveyResponses = all[s.id] ?? []
-      console.log(`Survey ${s.id} has ${surveyResponses.length} responses`)
       totalResponses += surveyResponses.length
     }
-    
-    console.log('Total responses:', totalResponses)
-    
+
     return {
       activeSurveys: published,
       respondents: totalResponses,

@@ -1,3 +1,5 @@
+import type { Question } from '../types/survey'
+
 export interface ValidationError {
   field: string
   message: string
@@ -8,26 +10,22 @@ export interface ValidationResult {
   errors: ValidationError[]
 }
 
-// Санитизация ввода для защиты от XSS
-export function sanitizeInput(input: string): string {
-  if (!input) return input
-  return input
-    .replace(/[<>]/g, '') // Удаляем угловые скобки
-    .replace(/javascript:/gi, '') // Удаляем javascript: протокол
-    .replace(/on\w+=/gi, '') // Удаляем обработчики событий
-    .trim()
-}
-
-// Проверка на потенциально опасный контент
+// Проверка на потенциально опасный контент (XSS)
 export function containsXSS(input: string): boolean {
   const xssPatterns = [
     /<script/i,
     /javascript:/i,
+    /vbscript:/i,
     /on\w+\s*=/i,
     /<iframe/i,
     /<object/i,
     /<embed/i,
-    /data:/i,
+    /<img[^>]+onerror/i,
+    /<svg[^>]+onload/i,
+    /expression\s*\(/i,
+    /data:\s*text\/html/i,
+    /<\/?form/i,
+    /<\/?input/i,
   ]
   return xssPatterns.some(pattern => pattern.test(input))
 }
@@ -139,17 +137,15 @@ export function validateLoginForm(data: {
   const errors: ValidationError[] = []
 
   if (!data.email) {
-    errors.push({ field: 'email', message: 'Введите имя пользователя' })
+    errors.push({ field: 'email', message: 'Введите email' })
   } else {
     const emailError = validateEmail(data.email)
     if (emailError) errors.push(emailError)
   }
 
+  // Для входа проверяем только наличие пароля (не требуем сложность)
   if (!data.password) {
     errors.push({ field: 'password', message: 'Введите пароль' })
-  } else {
-    const passwordError = validatePassword(data.password)
-    if (passwordError) errors.push(passwordError)
   }
 
   return {
@@ -174,8 +170,14 @@ export function validateAnswer(answer: string, questionId: string): ValidationEr
   return null
 }
 
-export function validateSurveyForm(answers: Record<string, string>, questions: Array<{ id: string; type: string }>): ValidationResult {
+export function validateSurveyForm(answers: Record<string, string>, questions: Question[]): ValidationResult {
   const errors: ValidationError[] = []
+
+  // Проверяем, что хотя бы на один вопрос есть ответ
+  const hasAnyAnswer = Object.values(answers).some(a => a && a.trim())
+  if (!hasAnyAnswer) {
+    errors.push({ field: 'general', message: 'Ответьте хотя бы на один вопрос' })
+  }
 
   questions.forEach((question) => {
     const answer = answers[question.id]

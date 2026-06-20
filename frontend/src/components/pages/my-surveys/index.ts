@@ -1,1 +1,1 @@
-export { default } from './ui/MySurveysPage'
+export { default } from './MySurveysPage'
