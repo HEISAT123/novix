@@ -12,7 +12,13 @@ const CheckIcon = () => (
   </svg>
 )
 
-export default function ThankYouPage() {
+interface PageText {
+  text: string,
+  withLink?: boolean,
+  withIcon?: boolean
+}
+
+export default function ThankYouPage({text = 'Спасибо за прохождение!', withLink = true, withIcon = true}: PageText) {
   const { id } = useParams<{ id: string }>()
   const [survey, setSurvey] = useState<Survey | null>(null)
 
@@ -36,11 +42,12 @@ export default function ThankYouPage() {
   return (
     <div className={styles.wrap}>
       <div className={styles.inner}>
+        {withIcon === true && (
         <div className={styles.icon} aria-hidden>
           <CheckIcon />
-        </div>
-        <h1 className={styles.title}>Спасибо за прохождение!</h1>
-        <Link to="/" className={styles.homeLink}>На главный</Link>
+        </div>)}
+        <h1 className={styles.title}>{text}</h1>
+        {withLink === true && (<Link to="/" className={styles.homeLink}>На главный</Link>)}
       </div>
     </div>
   )

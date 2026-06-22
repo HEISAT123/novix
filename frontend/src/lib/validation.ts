@@ -80,13 +80,13 @@ export function validateUsername(username: string): ValidationError | null {
     return { field: 'username', message: 'Имя пользователя должно содержать не менее 2 символов' }
   }
   
-  if (username.trim().length > 30) {
-    return { field: 'username', message: 'Имя пользователя не может быть длиннее 30 символов' }
+  if (username.trim().length > 50) {
+    return { field: 'username', message: 'Имя пользователя не может быть длиннее 50 символов' }
   }
   
-  const usernameRegex = /^[a-zA-Zа-яА-Я0-9_]+$/
+  const usernameRegex = /^[a-zA-Zа-яА-Я0-9]+(?: [a-zA-Zа-яА-Я0-9]+)*$/u;
   if (!usernameRegex.test(username)) {
-    return { field: 'username', message: 'Имя пользователя может содержать только буквы, цифры и нижнее подчёркивание' }
+    return { field: 'username', message: 'Имя пользователя может содержать только буквы, цифры и пробелы' }
   }
   
   return null

@@ -11,6 +11,7 @@ import styles from './SurveyEditorPage.module.scss'
 import PublishSurveyPopup from '../../popup/publish-survey-popup/PublishSurveyPopup'
 import SaveSurveyPopup from '../../popup/save-survey-popup/SaveSurveyPopup'
 import trashcanIcon from '../../../assets/trashcan.svg'
+import ThankYouPage from '../thank-you/ThankYouPage'
 
 // Функция для генерации UUID (альтернатива crypto.randomUUID для старых браузеров)
 function generateUUID(): string {
@@ -22,7 +23,7 @@ function generateUUID(): string {
 }
 
 const MIN_OPTIONS = 2
-const MAX_OPTIONS = 6
+const MAX_OPTIONS = 15
 
 function isSingleQuestion(question: Question): question is Question & { type: 'single'; options: QuestionOption[] } {
   return question.type === 'single'
@@ -237,8 +238,8 @@ export default function SurveyEditorPage() {
     }
   }, [id, navigate, upsertSurvey, getSurveyById, addQuestion, deleteQuestion, publishSurvey])
 
-  if (!survey && !isLoading) return <div className={styles.page}><Link to="/">Опрос не найден</Link></div>
-  if (!survey) return <div className={styles.page}>Загрузка…</div>
+  if (!survey && !isLoading) return <ThankYouPage text='Опрос не найден' withIcon={false}/>
+  if (!survey) return <ThankYouPage text='Загрузка' withLink={false} withIcon={false}/>
 
   const qIndex = (q: Question) => survey.questions.indexOf(q) + 1
   const removeQuestion = (qid: string) => {
@@ -328,7 +329,7 @@ export default function SurveyEditorPage() {
                     className={styles.questionTypeSelect}
                     onClick={() => handleQuestionTypeMenuToggle(q.id)}
                   >
-                    {q.type === 'single' ? 'Один вариант' : 'Короткий текст'}
+                    {q.type === 'single' ? 'Варианты ответа' : 'Текстовый ответ'}
                   </button>
                   {openQuestionTypeMenu === q.id && (
                     <div className={styles.questionTypeMenu}>
@@ -337,14 +338,14 @@ export default function SurveyEditorPage() {
                         onClick={() => handleQuestionTypeChange(q.id, 'single')}
                         className={q.type === 'single' ? styles.active : ''}
                       >
-                        Один вариант
+                        Варианты ответа
                       </button>
                       <button
                         type="button"
                         onClick={() => handleQuestionTypeChange(q.id, 'text')}
                         className={q.type === 'text' ? styles.active : ''}
                       >
-                        Короткий текст
+                        Текстовый ответ
                       </button>
                     </div>
                   )}
@@ -447,7 +448,7 @@ export default function SurveyEditorPage() {
             ><span className={styles.plusIcon}>+</span> Добавить вопрос</button>
             {addMenuOpen && (
               <div className={styles.menu}>
-                <button type="button" onClick={() => { setSurvey((s) => s ? ({ ...s, questions: [...s.questions, createEmptyQuestion('single')] }) : s); setAddMenuOpen(false); }}>Один вариант</button>
+                <button type="button" onClick={() => { setSurvey((s) => s ? ({ ...s, questions: [...s.questions, createEmptyQuestion('single')] }) : s); setAddMenuOpen(false); }}>Варианты ответа</button>
                 <button type="button" onClick={() => { setSurvey((s) => s ? ({ ...s, questions: [...s.questions, createEmptyQuestion('text')] }) : s); setAddMenuOpen(false); }}>Текстовый ответ</button>
               </div>
             )}
@@ -506,6 +507,13 @@ export default function SurveyEditorPage() {
           <div className={styles.statusRow}>
             <p className={styles.helperLinks}>
               <Link to={`/survey/${survey.public_id}`}>Открыть опрос</Link> · <Link to={`/results/${survey.id}`}>Результаты</Link>
+            </p>
+          </div>
+        )}
+        {survey.status !== 'published' && survey.public_id && (
+          <div className={styles.statusRow}>
+            <p className={styles.helperLinks}>
+              <Link to={`/results/${survey.id}`}>Результаты</Link>
             </p>
           </div>
         )}

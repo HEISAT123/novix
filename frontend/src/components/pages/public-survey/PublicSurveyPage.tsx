@@ -8,6 +8,7 @@ import { validateAnswer, validateSurveyForm, type ValidationError } from '../../
 import { appendResponse } from '../../../lib/surveysStorage'
 import type { AnswersMap, Survey } from '../../../types/survey'
 import styles from './PublicSurveyPage.module.scss'
+import ThankYouPage from '../thank-you/ThankYouPage'
 
 export default function PublicSurveyPage() {
   const { id } = useParams<{ id: string }>()
@@ -106,9 +107,8 @@ export default function PublicSurveyPage() {
     }
   }
 
-  if (isSurveyLoading) return <div className={styles.note}>Загрузка…</div>
-  if (!survey) return <div className={styles.note}><Link to="/">Опрос не найден. На главную</Link></div>
-  if (survey.status !== 'published') return <div className={styles.note}><Link to="/">Опрос не опубликован. На главную</Link></div>
+  if (isSurveyLoading) return <ThankYouPage text='Загрузка' withLink={false} withIcon={false}/>
+  if (!survey) return <ThankYouPage text='Опрос не найден' withIcon={false}/>
 
   return (
     <div className={styles.page}>

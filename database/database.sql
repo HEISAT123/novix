@@ -18,7 +18,7 @@ CREATE TABLE surveys (
                          author_id UUID NOT NULL,
                          title VARCHAR(255) NOT NULL,
                          description TEXT,
-                         status VARCHAR(20) DEFAULT 'draft',   -- ← VARCHAR, а не ENUM
+                         status VARCHAR(20) DEFAULT 'draft',
                          created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
                          updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
                          published_at TIMESTAMP WITH TIME ZONE,
@@ -33,7 +33,7 @@ CREATE TABLE questions (
                            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                            survey_id UUID NOT NULL,
                            text TEXT NOT NULL,
-                           type VARCHAR(20) NOT NULL,            -- 'single_choice' или 'text'
+                           type VARCHAR(20) NOT NULL,
                            order_index INTEGER DEFAULT 0,
                            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
                            CONSTRAINT fk_survey FOREIGN KEY (survey_id)

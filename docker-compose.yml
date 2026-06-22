@@ -18,7 +18,7 @@ services:
       novix:
         aliases:
           - postgres
-    restart: unless-stopped
+    restart: always
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-survey_service}"]
       interval: 10s
@@ -44,7 +44,7 @@ services:
         condition: service_healthy
     networks:
       - novix
-    restart: unless-stopped
+    restart: always
 
   frontend:
     build:
@@ -53,7 +53,7 @@ services:
       - backend
     networks:
       - novix
-    restart: unless-stopped
+    restart: always
 
   nginx:
     image: nginx:stable-alpine
@@ -68,7 +68,7 @@ services:
       - frontend
     networks:
       - novix
-    restart: unless-stopped
+    restart: always
 
 volumes:
   postgres_data:
